@@ -3,6 +3,7 @@
  */
 import {mwf} from "../Main.js";
 import {entities} from "../Main.js";
+import {GenericCRUDImplRemote} from "../Main.js";
 
 
 
@@ -58,10 +59,12 @@ export default class EditviewViewController extends mwf.ViewController {
     root;
     // TODO-REPEATED: declare custom instance attributes for this controller
     viewProxy;
+    addNewMediaItemElement;
+    mediaEditForm;
+    mediaItem;
 
-    constructor() {
-        super();
-
+    constructor() {        
+        super();    
         console.log("EditviewViewController()");
     }
 
@@ -70,25 +73,143 @@ export default class EditviewViewController extends mwf.ViewController {
      * for any view: initialise the view
      */
     async oncreate() {
-        // console.log("viewProxy", this.viewProxy)
-        // console.log("this", this)
+        
+        console.log("viewProxy", this.viewProxy)
+        console.log("this", this)
 
-        // // TODO: do databinding, set listeners, initialise the view
-        // this.mediaItem = this.args.item;
+        // TODO: do databinding, set listeners, initialise the view
+       
+        // Logik
+        // Eine View für Add und Edit
+        // Frage: Woher weiß das Programm, in welcher View du dich gerade befindest? Sprich list / read / Edit
+        // Frage: Wie differenziere ich das? Weil wenn ich ein Item erstellen möchte, brauche ich dann this.args.item? Wenn ja warum? Wenn nein, warum nicht?
+        // Frage: Wenn ich ein Item Editiere, brauche ich dann da ein Item bzw. da das item?
+        // Wie würdest Du das lösen?
+        // Wie übergibst du ein Item aus der List zu der EditView?
+           
+        this.editMediaForm = this.root.querySelector("#mediaEditForm");
 
+        if (!this.editMediaForm) {
+            console.error("No Form Found")
+        }
 
-        // this.viewProxy = this.bindElement(
-        //     "mediaEditView",
+        if (this.args && this.args.item) {
+            this.mediaItem = this.args.item
+        } else {
+            this.mediaItem = new entities.MediaItem("Example Title", "https://placehold.co/100x100")
+        }
+        
+        // if (!this.viewProxy) {
+        //     console.error("no viewProxy defined")
+        // }
+        
+        //  this.viewProxy = this.bindElement(
+        //     "mediaEditview",
         //     {
-        //       item: mediaItem,
+        //       item: this.mediaItem,
         //     },
         //     this.root
         //   ).viewProxy;
 
+
+        this.editMediaForm.onsubmit = (event) => {
+            event.preventDefault();
+            this.createItem()
+        }
+
+        // this.addNewMediaItemElement.onclick = () => {
+        //   this.createItem();
+        // };
+
+
+
+
+        /*
+        this.mediaItem = this.args.item;
+        //console.log(item);
+
+ 
+          this.viewProxy.bindAction("createItem", (event) =>{
+            event.original.preventDefault();
+          });
+          
+          
+          
+         
+        //const mediaEditForm = this.root.getElementbyID("mediaEditForm")[0];
+        /*
+        this.mediaItem.onsubmit = () => {
+            this.createItem(this.mediaItem);
+        }
+        */
+        
+        // this.mediaItem.onsubmit = createItem(){createItem};
+        // }
+            
         // call the superclass once creation is done
         super.oncreate();
+
+        
     }
 
+
+    createItem() {
+        const formData = new FormData(this.editMediaForm)
+        
+        this.mediaItem.src = formData.get("src")
+        this.mediaItem.title = formData.get("title")
+        this.mediaItem.description = formData.get("description")
+
+        debugger;
+
+        if (this.mediaItem.id) {
+            this.mediaItem.create().then(() => {
+                console.log("successfully created media item")
+                this.addToListview(this.mediaItem)
+            })
+        }
+        
+        // debugger;
+        // this.args.item.create().then(() => {
+
+        //     this.addToListview(this.args.item, "mediaOverview");
+
+        //     // entities.MediaItem.readAll().then((items) => {
+        //     //     this.initialiseListview(items);
+        //     // })
+        // })
+
+        // this.mediaItem.create().then((item) => 
+        //     this.addToListview(item)
+        // )
+
+        
+        // newItem.create().then(() => {
+        //     this.addToListview(newItem);
+        // }
+
+
+        // var newItem = new entities.MediaItem("", "https://placehold.co/100x100");
+        // this.showDialog("mediaEditview", {
+        //   item: newItem,
+        //   actionBindings: {
+        //     submitForm: (event) => {
+        //       event.original.preventDefault();
+        //       newItem.create().then(() => {
+        //         this.addToListview(newItem);
+        //       });
+        //       this.hideDialog();
+        //     },
+        //   },
+        // });
+        // cons
+      }
+
+    updateItem(item) {
+        item.update().then(() =>{           
+            this.previousView({ updatedItem: item });
+    })
+}
     /*
      * for views that initiate transitions to other views
      * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.

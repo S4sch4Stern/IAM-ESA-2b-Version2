@@ -26,6 +26,7 @@ export default class ReadviewViewController extends mwf.ViewController {
     // TODO: do databinding, set listeners, initialise the view
     var mediaItem = this.args.item;
     // new entities.MediaItem("m","https://placekitten.com/300/400");
+    debugger;
     this.viewProxy = this.bindElement(
       "mediaReadviewTemplate",
       {

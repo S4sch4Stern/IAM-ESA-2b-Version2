@@ -135,6 +135,8 @@
             </div>
         </main>
 
+    </div>
+
         <!--
         1erzeugen und modifizieren von mediaiten mittels submit input = speicher button kopfzeile
                 Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
@@ -178,22 +180,20 @@
 
 
         -->
-    </div>
-
     <div class="mwf-view" id="mediaEditView" data-mwf-viewcontroller="EditviewViewController">
         <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditview"></div>
         <header>
             <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
-            <h1 class="mwf-dyncontent">dynamische Name</h1>
-            <button class="mwf-imgbutton mwf-img-disk mwf-right-align"></button>
-            <button class="mwf-imgbutton mwf-img-delete mwf-right-align"></button>
-            <button class="mwf-imgbutton mwf-img-paste mwf-right-align"></button>
+            <h1 class="mwf-dyncontent">{{#if item.created}}{{item.title}}{{else}}Neues Medium{{/if}}</h1>
+            <input class="mwf-imgbutton mwf-img-disk mwf-right-align" type="submit" value="speichern" form="mediaEditForm"></input>
+            <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem"></button>
+            <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultURL"></button>
         </header>
         <main class="mwf-scrollview">
-            <form id="mediaEditForm">
-                <fieldset class="mwf-material">
+            <form id="mediaEditForm" on-submit="createItem">
+                <fieldset class="mwf-material" >
                     <legend>URL</legend>
-                    <input type="text" name="src" value="{{item.src}}" required>
+                    <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" required>
                 </fieldset>
                 <img class="" src="{{#if item.created}}{{item.src}}{{/if}}">
                 <fieldset class="mwf-material">
