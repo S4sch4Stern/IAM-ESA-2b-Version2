@@ -1,0 +1,216 @@
+<!-- 
+    @author Jörn Kreutel
+    @modifiziert von Alexander Thofern mittels Übungsdokument.pdf & tutorial.pdf
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MY MWF APP</title>
+    <!-- this tag avoids scaling the view on display -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- for pwa, we may include the manifest
+    <link rel="manifest" href="pwa/webapp-manifest.json"> -->
+    <!-- load the styles -->
+    <link rel="stylesheet" href="lib/css/normalize.css" />
+    <link rel="stylesheet" href="lib/css/mwf.css" />
+    <link rel="stylesheet" href="lib/css/mwfIcons.css" />
+    <!-- the application specific style -->
+    <link rel="stylesheet" href="css/myapp-style.css" />
+    <!-- TODO: comment-in if mapviews shall be used. It seems that libs and css need to be accessed online rather than be provided locally, there is also some issue when using leaflet+offline manifest... -->
+    <!--
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+        <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    -->
+    <!-- ractive templating engine -->
+    <script src="lib/js/external/ractive.min.js"></script>
+    <!-- load the application resources and initialise the mwf framework -->
+    <script type="module" src="js/Main.js"></script>
+</head>
+<!-- TODO: change the application name if it is adapted -->
+
+<body data-mwf-application="MyApplication" class="mwf-loading-app">
+
+    <!-- TODO-REPEATED: add new views here -->
+    <!--list-view -->
+    <div class="mwf-view mwf-view-initial" id="mediaOverview" data-mwf-viewcontroller="ListviewViewController">
+        <header>
+            <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
+            <h1 class="mwf-left-align">Medien</h1>
+            <button class="mwf-imgbutton mwf-img-plus mwf-right-align" id="addNewMediaItem"></button>
+        </header>
+        <main class="mwf-scrollview">
+            <ul class="mwf-listview" data-mwf-listitem-view="myapp-listitem" data-mwf-listitem-menu="mediaItemMenu">
+                <li class="mwf-listitem mwf-li-title-subtitle mwf-template mwf-databind"
+                    data-mwf-templatename="myapp-listitem" data-mwf-targetview="mediaReadview">
+                    <img class="mwf-left-align" src="{{src}}" />
+                    <div class="mwf-li-titleblock">
+                        <h2>{{title}}{{_id}}</h2>
+                        <h3>{{addedDateString}}</h3>
+                    </div>
+                    <button class="mwf-imgbutton mwf-img-options-vertical mwf-right-align mwf-listitem-menu-control">
+                </li>
+            </ul>
+        </main>
+        <footer class="footerStyle">
+            <p class="mwf-left-align" id="crudOperationStatus"></p>
+            <button id="switchCRUDOperation" class=" mwf-imgbutton mwf-img-refresh mwf-right-align"></button>
+        </footer>
+    </div>
+
+    <!--readview of one listItem name, deleteButton & goBackButton-->
+    <div class="mwf-view " id="mediaReadview" data-mwf-viewcontroller="ReadviewViewController">
+
+        <div class="mwf-template mwf-databind" data-mwf-templatename="mediaReadviewTemplate">
+
+            <header>
+                <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
+                <h1 class="mwf-left-align">{{item.title}}</h1>
+                <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem"></button>
+            </header>
+
+            <main class="mwf-scrollview">
+                <img src="{{item.src}}" />
+            </main>
+
+            <footer>
+                <button class="mwf-back mwf-imgbutton mwf-img-backward"></button>
+            </footer>
+
+        </div>
+    </div>
+
+
+    <!-- Popup-dialog-menu on listItem(title) delete & edit -->
+    <div data-mwf-templatename="mediaItemMenu" class="mwf-listitem-menu mwf-template mwf-databind mwf-dialog mwf-popup">
+        <header>
+            <h2 class="mwf-dyncontent">{{title}}{{_id}}</h2>
+        </header>
+        <main>
+            <ul>
+                <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="deleteItemConfirmDialog">Löschen
+                </li>
+                <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="editItem">Editieren</li>
+            </ul>
+        </main>
+    </div>
+
+    <!-- Popup-dialog add new object/listItem-->
+    <div class="mwf-dialog mwf-popup mwf-template mwf-databind mwf-view-component "
+        data-mwf-viewcontroller="GenericDialogTemplateViewController" data-mwf-templatename="mediaItemDialog">
+        <main>
+            <h2>{{#if item.created}}Medium editieren{{else}}Neues
+                Medium{{/if}}</h2>
+            <form id="itemEditForm" on-submit="submitForm">
+                <input name="title" autocomplete="off" class="mwf-autofocus" type="text" placeholder="Titel"
+                    required="required" value="{{item.title}}" />
+                <div class="mwf-buttonbar">
+                    <button class="mwf-left-align mwf-button" disabled="{{#unless item.created}}disabled{{/unless}}"
+                        type="button" on-click="deleteItem">Löschen
+                    </button>
+                    <input class="mwf-button-prio mwf-right-align mwf-button" type="submit"
+                        value="{{#if item.created}}Ändern{{else}}Hinzufügen{{/if}}" />
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!--Popup-dialog delete confirmation & cancel-->
+    <div class="mwf-dialog mwf-popup mwf-template mwf-databind mwf-view-component "
+        data-mwf-viewcontroller="GenericDialogTemplateViewController" data-mwf-templatename="mediaItemDeleteDialog">
+        <main>
+            <h2>Medium löschen</h2>
+            <h4 class="deleteDialogQuestion">Möchten Sie das Medium {{item.title}} wirklich löschen?</h4>
+
+            <div class="mwf-buttonbar">
+                <button class=" mwf-left-align mwf-button" type="button" on-click="cancelDeleteDialog"> Abbrechen
+                </button>
+                <button class="mwf-button-prio mwf-right-align mwf-button" type="button" on-click="deleteItem">Löschen
+                </button>
+            </div>
+        </main>
+
+        <!--
+        1erzeugen und modifizieren von mediaiten mittels submit input = speicher button kopfzeile
+                Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
+            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
+        2Löschen button - kopfzeile
+    
+        3 Elemente src, title und description von MediaItem
+        4 falls noch keine item exisitert soll create aufgerufen werden - vorgängeransicht aktualisieren
+            Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
+            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
+        5 wenn keine mediaitem exisisert soll lösch button nicht bedienbar sein
+        6 wenn item existiert sollen die werte abgerufen und in die Formular-Felder eingetragen werden
+        7 Vorschaubild aus src auslesen - auch beim erzeugen von item - kein ractive data binding experssion
+        manuel dem viewcontroller zuweisen
+            Hierfür können Sie z.B. einen Event Listener für das blur Event auf dem Eingabefeld
+                für das src Attribut setzen.
+
+        8 wenn item existiert bei betätigung des speicher btuittons update ausgeführt werden - zurück zu vorgängeransicht readview
+            Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
+            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
+        9 wenn item existiert bei betätigung des delete btuittons delete ausgeführt werden - zurück zu vorgängeransicht listview
+        10 kopzeile " neues medium" wenn neu oder wenn exisitiert dann title vom objekt angezeigt werden
+        11 fußzeile back button - listview
+        b drei Eingabeelemente jeweils als Kindelement eines <fieldset>
+        c die Feldnamen darin als <legend> angeben.
+        d <fieldset> markieren Sie dann mit der Klasse mwf-material.
+        e Beschreibung’ als textarea
+
+        12 paste url button - Default-Wert nur für neue mediaitems aktiv sein - bei betätigen soll das vorschaubild aktualisiert werden
+            Zur Darstellung des Bedienelements könnten Sie z.B. die Bildklasse mwf-img-paste
+                verwenden. Um das Eingabeelement für die URL nach Befüllung als ‘befüllt’ anzuzeigen, können
+                Sie bei Nutzung von mwf-material das entsprechende <fieldset> mit den Klassen mwf-material-filled
+                und mwf-material-valid markieren. Letztere Darstellungsmöglichkeit ist jedoch nicht abnahmerelevant.
+
+        13  aktionsmenü in listview ... Punkte button - mwf editieren erhalten - hinzufügen soll der editierdialog dargestellt werden
+            Dafür können Sie auf dem Element für die neue Aktion anstelle des Attributs
+            data-mwf-targetaction das Attribut data-mwf-targetview verwenden und diesem die id der Editieransicht
+            zuweisen.
+
+        14 aktionsmenü in listview ... Punkte button - clone des ausgewählten mediaitems
+
+
+        -->
+    </div>
+
+    <div class="mwf-view" id="mediaEditView" data-mwf-viewcontroller="EditviewViewController">
+        <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditview"></div>
+        <header>
+            <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
+            <h1 class="mwf-dyncontent">dynamische Name</h1>
+            <button class="mwf-imgbutton mwf-img-disk mwf-right-align"></button>
+            <button class="mwf-imgbutton mwf-img-delete mwf-right-align"></button>
+            <button class="mwf-imgbutton mwf-img-paste mwf-right-align"></button>
+        </header>
+        <main class="mwf-scrollview">
+            <form id="mediaEditForm">
+                <fieldset class="mwf-material">
+                    <legend>URL</legend>
+                    <input type="text" name="src" value="{{item.src}}" required>
+                </fieldset>
+                <img class="" src="{{#if item.created}}{{item.src}}{{/if}}">
+                <fieldset class="mwf-material">
+                    <legend>Titel</legend>
+                    <input type="text" name="title" value="{{item.title}}" required>
+                </fieldset>
+                <fieldset class="mwf-material">
+                    <legend>Beschreibung</legend>
+                    <textarea name="description" value="{{item.description}}"></textarea>
+                </fieldset>
+            </form>
+        </main>
+        <footer>
+            <button class="mwf-back mwf-imgbutton mwf-img-backward"></button>
+        </footer>
+    </div>
+
+</body>
+
+</html>
