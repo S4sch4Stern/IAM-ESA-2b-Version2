@@ -38,7 +38,7 @@ export default class ListviewViewController extends mwf.ViewController {
     console.log("this", this)
 
     this.addNewMediaItemElement.onclick = () => {
-      this.nextView("mediaEditView", {item : new entities.MediaItem()});
+      this.nextView("mediaEditView");
       //this.nextView("mediaEditView");
     }
   

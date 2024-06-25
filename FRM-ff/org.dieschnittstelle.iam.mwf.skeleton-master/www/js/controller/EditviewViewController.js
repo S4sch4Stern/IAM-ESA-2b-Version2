@@ -86,7 +86,7 @@ export default class EditviewViewController extends mwf.ViewController {
         // Frage: Wenn ich ein Item Editiere, brauche ich dann da ein Item bzw. da das item?
         // Wie würdest Du das lösen?
         // Wie übergibst du ein Item aus der List zu der EditView?
-           
+        debugger;
         this.editMediaForm = this.root.querySelector("#mediaEditForm");
 
         if (!this.editMediaForm) {
@@ -154,6 +154,7 @@ export default class EditviewViewController extends mwf.ViewController {
 
 
     createItem() {
+        debugger;
         const formData = new FormData(this.editMediaForm)
         
         this.mediaItem.src = formData.get("src")
@@ -162,10 +163,10 @@ export default class EditviewViewController extends mwf.ViewController {
 
         debugger;
 
-        if (this.mediaItem.id) {
+        if (this.mediaItem._id) {
             this.mediaItem.create().then(() => {
                 console.log("successfully created media item")
-                this.addToListview(this.mediaItem)
+                this.nextView("mediaOverview");
             })
         }
         

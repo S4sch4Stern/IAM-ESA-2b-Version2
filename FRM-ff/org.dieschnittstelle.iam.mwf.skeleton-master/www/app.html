@@ -50,7 +50,7 @@
                     data-mwf-templatename="myapp-listitem" data-mwf-targetview="mediaReadview">
                     <img class="mwf-left-align" src="{{src}}" />
                     <div class="mwf-li-titleblock">
-                        <h2>{{title}}{{_id}}</h2>
+                        <h2>{{title}}</h2>
                         <h3>{{addedDateString}}</h3>
                     </div>
                     <button class="mwf-imgbutton mwf-img-options-vertical mwf-right-align mwf-listitem-menu-control">
@@ -190,7 +190,7 @@
             <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultURL"></button>
         </header>
         <main class="mwf-scrollview">
-            <form id="mediaEditForm" on-submit="createItem">
+            <form id="mediaEditForm">
                 <fieldset class="mwf-material" >
                     <legend>URL</legend>
                     <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" required>
