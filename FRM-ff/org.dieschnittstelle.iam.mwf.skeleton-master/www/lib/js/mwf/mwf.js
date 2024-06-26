@@ -1539,6 +1539,7 @@ class ViewController {
      * bind a view element to some data - elementid might either be an element or a template - this function will be used by subclasses, e.g. for instantiating forms
      */
     bindElement(elementid, data, parent) {
+        debugger;
         console.log("bindElement(): " + elementid);
 
         var boundElement = null;

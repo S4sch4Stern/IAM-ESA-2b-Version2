@@ -35,10 +35,11 @@ export default class ListviewViewController extends mwf.ViewController {
     };
     */
 
-    console.log("this", this)
+    //console.log("this", this)
 
     this.addNewMediaItemElement.onclick = () => {
       this.nextView("mediaEditView");
+      //this.nextView("mediaEditView", {item: new entities.MediaItem()});
       //this.nextView("mediaEditView");
     }
   
@@ -63,7 +64,7 @@ export default class ListviewViewController extends mwf.ViewController {
     super.oncreate();
   }
 
-  /*
+  /* Alte create methode bis MWF/NJM+LDS
   createNewItem() {
     // var newItem = new entities.MediaItem("", "https://placekitten.com/100/100");
 
@@ -144,6 +145,24 @@ export default class ListviewViewController extends mwf.ViewController {
       },
     });
   }
+
+  // readAllItems - refreshView
+  readAllItems() {
+    entities.MediaItem.readAll().then(items => {
+        this.initialiseListview(items);
+    });
+}
+
+//copyItem
+copyItem(item){
+  debugger;
+  const newMediaItem = new entities.MediaItem(item.title, item.src, item.description);
+  newMediaItem.create().then(() => {
+    this.readAllItems();
+    this.hideDialog(); 
+  });
+
+}
 
   /*
    * for views that initiate transitions to other views

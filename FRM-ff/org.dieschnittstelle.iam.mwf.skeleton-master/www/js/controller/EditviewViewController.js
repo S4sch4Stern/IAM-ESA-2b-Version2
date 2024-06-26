@@ -1,11 +1,9 @@
 /**
  * @author Jörn Kreutel
  */
-import {mwf} from "../Main.js";
-import {entities} from "../Main.js";
-import {GenericCRUDImplRemote} from "../Main.js";
-
-
+import { mwf } from "../Main.js";
+import { entities } from "../Main.js";
+import { GenericCRUDImplRemote } from "../Main.js";
 
 /**
  * to do
@@ -53,207 +51,180 @@ import {GenericCRUDImplRemote} from "../Main.js";
  */
 
 export default class EditviewViewController extends mwf.ViewController {
+  // instance attributes set by mwf after instantiation
+  args;
+  root;
+  // TODO-REPEATED: declare custom instance attributes for this controller
+  viewProxy;
+  addNewMediaItemElement;
+  mediaEditForm;
+  mediaItem;
 
-    // instance attributes set by mwf after instantiation
-    args;
-    root;
-    // TODO-REPEATED: declare custom instance attributes for this controller
-    viewProxy;
-    addNewMediaItemElement;
-    mediaEditForm;
-    mediaItem;
+  constructor() {
+    super();
+    console.log("EditviewViewController()");
+  }
 
-    constructor() {        
-        super();    
-        console.log("EditviewViewController()");
-    }
+  /*
+   * for any view: initialise the view
+   */
+  async oncreate() {
 
+    //console.log("viewProxy", this.viewProxy);
+    //console.log("this", this);
 
+    // TODO: do databinding, set listeners, initialise the view
+
+    // Logik
+    // Eine View für Add und Edit
+    // Frage: Woher weiß das Programm, in welcher View du dich gerade befindest? Sprich list / read / Edit
+    // Frage: Wie differenziere ich das? Weil wenn ich ein Item erstellen möchte, brauche ich dann this.args.item? Wenn ja warum? Wenn nein, warum nicht?
+    // Frage: Wenn ich ein Item Editiere, brauche ich dann da ein Item bzw. da das item?
+    // Wie würdest Du das lösen?
+    // Wie übergibst du ein Item aus der List zu der EditView?
+    this.editMediaForm = this.root.querySelector("#mediaEditForm");
+    
     /*
-     * for any view: initialise the view
-     */
-    async oncreate() {
-        
-        console.log("viewProxy", this.viewProxy)
-        console.log("this", this)
-
-        // TODO: do databinding, set listeners, initialise the view
-       
-        // Logik
-        // Eine View für Add und Edit
-        // Frage: Woher weiß das Programm, in welcher View du dich gerade befindest? Sprich list / read / Edit
-        // Frage: Wie differenziere ich das? Weil wenn ich ein Item erstellen möchte, brauche ich dann this.args.item? Wenn ja warum? Wenn nein, warum nicht?
-        // Frage: Wenn ich ein Item Editiere, brauche ich dann da ein Item bzw. da das item?
-        // Wie würdest Du das lösen?
-        // Wie übergibst du ein Item aus der List zu der EditView?
-        debugger;
-        this.editMediaForm = this.root.querySelector("#mediaEditForm");
-
-        if (!this.editMediaForm) {
-            console.error("No Form Found")
-        }
-
-        if (this.args && this.args.item) {
-            this.mediaItem = this.args.item
-        } else {
-            this.mediaItem = new entities.MediaItem("Example Title", "https://placehold.co/100x100")
-        }
-        
-        // if (!this.viewProxy) {
-        //     console.error("no viewProxy defined")
-        // }
-        
-        //  this.viewProxy = this.bindElement(
-        //     "mediaEditview",
-        //     {
-        //       item: this.mediaItem,
-        //     },
-        //     this.root
-        //   ).viewProxy;
-
-
-        this.editMediaForm.onsubmit = (event) => {
-            event.preventDefault();
-            this.createItem()
-        }
-
-        // this.addNewMediaItemElement.onclick = () => {
-        //   this.createItem();
-        // };
-
-
-
-
-        /*
-        this.mediaItem = this.args.item;
-        //console.log(item);
-
+    debugger;
+    this.viewProxy = this.bindElement(
+        "mediaEditview", { item: this.mediaItem = new entities.MediaItem() }, this.root
+    ).viewProxy;
+    console.log("viewProxy", this.viewProxy);
+    console.log("this", this);
+    */  
  
-          this.viewProxy.bindAction("createItem", (event) =>{
-            event.original.preventDefault();
-          });
-          
-          
-          
-         
-        //const mediaEditForm = this.root.getElementbyID("mediaEditForm")[0];
-        /*
-        this.mediaItem.onsubmit = () => {
-            this.createItem(this.mediaItem);
-        }
-        */
-        
-        // this.mediaItem.onsubmit = createItem(){createItem};
-        // }
-            
-        // call the superclass once creation is done
-        super.oncreate();
 
-        
+
+
+    if (!this.editMediaForm) {
+      console.error("No Form Found");
     }
 
+    if (this.args && this.args.item) {
+      this.mediaItem = this.args.item;
+    } else {
+      this.mediaItem = new entities.MediaItem();
+      this.args = {item: new entities.MediaItem()};
+    }
+      
+ 
+    this.editMediaForm.onsubmit = (event) => {
+      event.preventDefault();
+      this.createItem();
+    };
 
-    createItem() {
+    // debugger;
+    const mediaItem = this.mediaItem
+    
+    this.viewProxy = this.bindElement("mediaEditviewTemplate", {item: mediaItem}, this.root).viewProxy;
+    console.log("this");
+    console.log(this);
+
+    if (!this.viewProxy) {
+      console.error("viewProxy not defined")
+    }
+
+    if(!this.args.item) {
+      console.error("args item not defined")
+    }
+    
+    //console.log("viewProxy", this.viewProxy);
+    //console.log("this", this);
+    /*
+    debugger;
+    console.log("viewProxy", this.viewProxy);
+    console.log("this", this);
+    
+    this.viewProxy.bindAction("pasteDefaultURL", (() => {
+        this.pasteDefaultUrl(this.mediaItem);
+    }));
+    */
+    
+    
+    // call the superclass once creation is done
+    super.oncreate();
+  }
+
+  createItem() {
+
+    const formData = new FormData(this.editMediaForm);
+
+    this.mediaItem.src = formData.get("src");
+    this.mediaItem.title = formData.get("title");
+    this.mediaItem.description = formData.get("description"); 
+
+    if (this.mediaItem._id) {
+      this.mediaItem.create().then(() => {
         debugger;
-        const formData = new FormData(this.editMediaForm)
         
-        this.mediaItem.src = formData.get("src")
-        this.mediaItem.title = formData.get("title")
-        this.mediaItem.description = formData.get("description")
+        console.log("successfully created media item");
+        this.nextView("mediaOverview");
+      });
+    
+    }
+  }
 
-        debugger;
+  updateItem(item) {
+    item.update().then(() => {
+      this.previousView({ updatedItem: item });
+    });
+  }
 
-        if (this.mediaItem._id) {
-            this.mediaItem.create().then(() => {
-                console.log("successfully created media item")
-                this.nextView("mediaOverview");
-            })
-        }
-        
-        // debugger;
-        // this.args.item.create().then(() => {
-
-        //     this.addToListview(this.args.item, "mediaOverview");
-
-        //     // entities.MediaItem.readAll().then((items) => {
-        //     //     this.initialiseListview(items);
-        //     // })
-        // })
-
-        // this.mediaItem.create().then((item) => 
-        //     this.addToListview(item)
-        // )
-
-        
-        // newItem.create().then(() => {
-        //     this.addToListview(newItem);
-        // }
+  debugger;
+  pasteDefaultUrl(item){
+    debugger;
+    const defaultUrl = "https://placehold.co/400";
+    item.src = defaultUrl;
+    this.viewProxy.update({ item: item });
+    mediaEditForm.defaultUrl.classList.add("mwf-material-filled", "mwf-material-valid");
+    
+  }
+  test(){
+    console.log("PasteURL");
+  }
+    
 
 
-        // var newItem = new entities.MediaItem("", "https://placehold.co/100x100");
-        // this.showDialog("mediaEditview", {
-        //   item: newItem,
-        //   actionBindings: {
-        //     submitForm: (event) => {
-        //       event.original.preventDefault();
-        //       newItem.create().then(() => {
-        //         this.addToListview(newItem);
-        //       });
-        //       this.hideDialog();
-        //     },
-        //   },
-        // });
-        // cons
-      }
+  /*
+   * for views that initiate transitions to other views
+   * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.
+   */
+  async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
+    // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
+  }
 
-    updateItem(item) {
-        item.update().then(() =>{           
-            this.previousView({ updatedItem: item });
-    })
+  /*
+   * for views with listviews: bind a list item to an item view
+   * TODO: delete if no listview is used or if databinding uses ractive templates
+   */
+  bindListItemView(listviewid, itemview, itemobj) {
+    // TODO: implement how attributes of itemobj shall be displayed in itemview
+  }
+
+  /*
+   * for views with listviews: react to the selection of a listitem
+   * TODO: delete if no listview is used or if item selection is specified by targetview/targetaction
+   */
+  onListItemSelected(itemobj, listviewid) {
+    // TODO: implement how selection of itemobj shall be handled
+  }
+
+  /*
+   * for views with listviews: react to the selection of a listitem menu option
+   * TODO: delete if no listview is used or if item selection is specified by targetview/targetaction
+   */
+  onListItemMenuItemSelected(menuitemview, itemobj, listview) {
+    // TODO: implement how selection of the option menuitemview for itemobj shall be handled
+  }
+
+  /*
+   * for views with dialogs
+   * TODO: delete if no dialogs are used or if generic controller for dialogs is employed
+   */
+  bindDialog(dialogid, dialogview, dialogdataobj) {
+    // call the supertype function
+    super.bindDialog(dialogid, dialogview, dialogdataobj);
+
+    // TODO: implement action bindings for dialog, accessing dialog.root
+  }
 }
-    /*
-     * for views that initiate transitions to other views
-     * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.
-     */
-    async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
-        // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
-    }
-
-
-    /*
-     * for views with listviews: bind a list item to an item view
-     * TODO: delete if no listview is used or if databinding uses ractive templates
-     */
-    bindListItemView(listviewid, itemview, itemobj) {
-        // TODO: implement how attributes of itemobj shall be displayed in itemview
-    }
-
-    /*
-     * for views with listviews: react to the selection of a listitem
-     * TODO: delete if no listview is used or if item selection is specified by targetview/targetaction
-     */
-    onListItemSelected(itemobj, listviewid) {
-        // TODO: implement how selection of itemobj shall be handled
-    }
-
-    /*
-     * for views with listviews: react to the selection of a listitem menu option
-     * TODO: delete if no listview is used or if item selection is specified by targetview/targetaction
-     */
-    onListItemMenuItemSelected(menuitemview, itemobj, listview) {
-        // TODO: implement how selection of the option menuitemview for itemobj shall be handled
-    }
-
-    /*
-     * for views with dialogs
-     * TODO: delete if no dialogs are used or if generic controller for dialogs is employed
-     */
-    bindDialog(dialogid, dialogview, dialogdataobj) {
-        // call the supertype function
-        super.bindDialog(dialogid, dialogview, dialogdataobj);
-
-        // TODO: implement action bindings for dialog, accessing dialog.root
-    }
-
-}
-

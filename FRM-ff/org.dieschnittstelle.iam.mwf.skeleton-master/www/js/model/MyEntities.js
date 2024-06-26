@@ -30,10 +30,11 @@ export class MediaItem extends EntityManager.Entity {
     added = Date.now();
     description = "";
   
-    constructor(title, src, contentType) {
+    constructor(title, src, description, contentType) {
       super();
       this.title = title;
       this.src = src;
+      this.description = description;
       this.contentType = contentType;
     }
   
