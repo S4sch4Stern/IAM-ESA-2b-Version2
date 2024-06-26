@@ -185,17 +185,17 @@
 
         -->
         <div class="mwf-view" id="mediaEditView" data-mwf-viewcontroller="EditviewViewController">
-            <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditviewTemplate"></div>
+            <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditviewTemplate">
             <header>
                 <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
                 <h1 class="mwf-dyncontent">{{#if item.created}}{{item.title}}{{else}}Neues Medium{{/if}}</h1>
                 <input class="mwf-imgbutton mwf-img-disk mwf-right-align" type="submit" value="speichern" form="mediaEditForm"></input>
                 <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem"></button>
-                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultURL"></button>
+                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultUrl"></button>
             </header>
             <main class="mwf-scrollview">
-                <form id="mediaEditForm" on-submit="createItem">
-                    <fieldset class="mwf-material" >
+                <form id="mediaEditForm">
+                    <fieldset class="mwf-material" name="defaultUrl" >
                         <legend>URL</legend>
                         <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" required>
                     </fieldset>
@@ -214,6 +214,8 @@
                 <button class="mwf-back mwf-imgbutton mwf-img-backward"></button>
             </footer>
         </div>
+    </div>
+
 
 </body>
 

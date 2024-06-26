@@ -4,6 +4,7 @@
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
 import { GenericCRUDImplRemote } from "../Main.js";
+import { MyApplication as application } from "../Main.js";
 
 /**
  * to do
@@ -58,7 +59,6 @@ export default class EditviewViewController extends mwf.ViewController {
   viewProxy;
   addNewMediaItemElement;
   mediaEditForm;
-  mediaItem;
 
   constructor() {
     super();
@@ -69,6 +69,29 @@ export default class EditviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
+    this.mediaItem = this.args.item;
+
+    this.viewProxy = this.bindElement(
+      "mediaEditviewTemplate",
+      { item: this.mediaItem },
+      this.root
+    ).viewProxy;
+
+    this.viewProxy.bindAction("pasteDefaultUrl", () => {
+      this.pasteDefaultUrl(this.mediaItem);
+    });
+    /*
+  debugger;
+  this.mediaItem = this.args.item;
+
+  this.viewProxy = this.bindElement(
+    "mediaEditviewTemplate", { item: this.mediaItem }, this.root
+).viewProxy;
+debugger;
+console.log("view");
+console.log(this);
+console.log(this.viewProxy);
+*/
 
     //console.log("viewProxy", this.viewProxy);
     //console.log("this", this);
@@ -82,6 +105,7 @@ export default class EditviewViewController extends mwf.ViewController {
     // Frage: Wenn ich ein Item Editiere, brauche ich dann da ein Item bzw. da das item?
     // Wie würdest Du das lösen?
     // Wie übergibst du ein Item aus der List zu der EditView?
+    /*
     this.editMediaForm = this.root.querySelector("#mediaEditForm");
     
     /*
@@ -91,11 +115,9 @@ export default class EditviewViewController extends mwf.ViewController {
     ).viewProxy;
     console.log("viewProxy", this.viewProxy);
     console.log("this", this);
-    */  
- 
+    */
 
-
-
+    /*
     if (!this.editMediaForm) {
       console.error("No Form Found");
     }
@@ -106,20 +128,34 @@ export default class EditviewViewController extends mwf.ViewController {
       this.mediaItem = new entities.MediaItem();
       this.args = {item: new entities.MediaItem()};
     }
-      
- 
+      */
+
+    /*
+    debugger;
+    const editMediaForm = this.root.querySelector("#mediaEditForm");
+    editMediaForm.onsubmit = () => {
+      //event.preventDefault();
+      //this.createItem();
+      debugger;
+      this.createItem(this.mediaItem);
+    };
+    */
+    debugger;
+    this.editMediaForm = this.root.querySelector("#mediaEditForm");
     this.editMediaForm.onsubmit = (event) => {
       event.preventDefault();
       this.createItem();
+      //this.createItem(this.mediaItem);
     };
 
     // debugger;
-    const mediaItem = this.mediaItem
-    
-    this.viewProxy = this.bindElement("mediaEditviewTemplate", {item: mediaItem}, this.root).viewProxy;
+
+    /*
+    this.viewProxy = this.bindElement("mediaEditviewTemplate", {item: this.mediaItem}, this.root).viewProxy;
     console.log("this");
     console.log(this);
-
+*/
+    /*
     if (!this.viewProxy) {
       console.error("viewProxy not defined")
     }
@@ -127,7 +163,8 @@ export default class EditviewViewController extends mwf.ViewController {
     if(!this.args.item) {
       console.error("args item not defined")
     }
-    
+      */
+
     //console.log("viewProxy", this.viewProxy);
     //console.log("this", this);
     /*
@@ -139,28 +176,24 @@ export default class EditviewViewController extends mwf.ViewController {
         this.pasteDefaultUrl(this.mediaItem);
     }));
     */
-    
-    
+
     // call the superclass once creation is done
     super.oncreate();
   }
 
   createItem() {
-
+    debugger;
     const formData = new FormData(this.editMediaForm);
 
     this.mediaItem.src = formData.get("src");
     this.mediaItem.title = formData.get("title");
-    this.mediaItem.description = formData.get("description"); 
+    this.mediaItem.description = formData.get("description");
 
     if (this.mediaItem._id) {
       this.mediaItem.create().then(() => {
-        debugger;
-        
         console.log("successfully created media item");
         this.nextView("mediaOverview");
       });
-    
     }
   }
 
@@ -171,19 +204,19 @@ export default class EditviewViewController extends mwf.ViewController {
   }
 
   debugger;
-  pasteDefaultUrl(item){
+  pasteDefaultUrl(item) {
     debugger;
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
     this.viewProxy.update({ item: item });
-    mediaEditForm.defaultUrl.classList.add("mwf-material-filled", "mwf-material-valid");
-    
+    mediaEditForm.defaultUrl.classList.add(
+      "mwf-material-filled",
+      "mwf-material-valid"
+    );
   }
-  test(){
+  test() {
     console.log("PasteURL");
   }
-    
-
 
   /*
    * for views that initiate transitions to other views

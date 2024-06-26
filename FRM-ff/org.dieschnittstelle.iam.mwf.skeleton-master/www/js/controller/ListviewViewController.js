@@ -11,10 +11,10 @@ export default class ListviewViewController extends mwf.ViewController {
   root;
 
   // TODO-REPEATED: declare custom instance attributes for this controller
+  viewProxy;
   items;
   addNewMediaItemElement;
   switchCRUDOperation;
-  viewProxy;
 
   constructor() {
     super();
@@ -28,22 +28,31 @@ export default class ListviewViewController extends mwf.ViewController {
   async oncreate() {
     // TODO: do databinding, set listeners, initialise the view
     this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
-
     /* old add MWF
     this.addNewMediaItemElement.onclick = () => {
       this.createNewItem();
     };
     */
-
-    //console.log("this", this)
-
     this.addNewMediaItemElement.onclick = () => {
-      this.nextView("mediaEditView");
+      this.nextView("mediaEditView", { item: new entities.MediaItem() });
+      //this.nextView("mediaEditView", {item: new entities.MediaItem()});
+      //this.nextView("mediaEditView");
+    };
+    /*
+    this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
+    /* old add MWF
+    this.addNewMediaItemElement.onclick = () => {
+      this.createNewItem();
+    };
+    
+    this.addNewMediaItemElement.onclick = () => {
+      this.nextView("mediaEditView", {item: new entities.MediaItem()});
       //this.nextView("mediaEditView", {item: new entities.MediaItem()});
       //this.nextView("mediaEditView");
     }
-  
+    */
 
+    this.readAllItems();
 
     // switching CRUD Operations
     this.switchCRUDOperation = this.root.querySelector("#switchCRUDOperation");
@@ -52,9 +61,7 @@ export default class ListviewViewController extends mwf.ViewController {
       this.switchCRUDOps();
     };
 
-    entities.MediaItem.readAll().then((items) => {
-      this.initialiseListview(items);
-    });
+    this.readAllItems();
 
     // set the currentCRUDScope
     this.root.querySelector("#crudOperationStatus").innerHTML =
@@ -148,21 +155,23 @@ export default class ListviewViewController extends mwf.ViewController {
 
   // readAllItems - refreshView
   readAllItems() {
-    entities.MediaItem.readAll().then(items => {
-        this.initialiseListview(items);
+    entities.MediaItem.readAll().then((items) => {
+      this.initialiseListview(items);
     });
-}
+  }
 
-//copyItem
-copyItem(item){
-  debugger;
-  const newMediaItem = new entities.MediaItem(item.title, item.src, item.description);
-  newMediaItem.create().then(() => {
-    this.readAllItems();
-    this.hideDialog(); 
-  });
-
-}
+  //copyItem
+  copyItem(item) {
+    const newMediaItem = new entities.MediaItem(
+      item.title,
+      item.src,
+      item.description
+    );
+    newMediaItem.create().then(() => {
+      this.readAllItems();
+      this.hideDialog();
+    });
+  }
 
   /*
    * for views that initiate transitions to other views
