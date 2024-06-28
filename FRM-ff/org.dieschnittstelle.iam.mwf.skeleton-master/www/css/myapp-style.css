@@ -17,8 +17,13 @@
    justify-content: space-between;
 }
 
-.deleteDialogQuestion{
+.deleteDialogQuestion {
    color: black;
    font-weight: normal;
    padding-left: 10px;
+}
+
+.previewImage {
+   max-width: 400px;
+   max-height: 400px;
 }

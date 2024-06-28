@@ -197,9 +197,9 @@
                 <form id="mediaEditForm">
                     <fieldset class="mwf-material" name="defaultUrl" >
                         <legend>URL</legend>
-                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" required>
+                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" on-blur="refreshPreviewImage" required>
                     </fieldset>
-                    <img class="" src="{{#if item.created}}{{item.src}}{{/if}}">
+                    <img class="previewImage" src="{{#if item.created}}{{item.src}}{{/if}}">
                     <fieldset class="mwf-material">
                         <legend>Titel</legend>
                         <input type="text" name="title" value="{{item.title}}" required>

@@ -4,6 +4,8 @@
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
 import { GenericCRUDImplRemote } from "../Main.js";
+import { GenericCRUDImplLocal } from "../Main.js";
+
 import { MyApplication as application } from "../Main.js";
 
 /**
@@ -62,6 +64,8 @@ export default class EditviewViewController extends mwf.ViewController {
 
   constructor() {
     super();
+    this.crudops = GenericCRUDImplRemote.newInstance("MediaItem");
+    this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
     console.log("EditviewViewController()");
   }
 
@@ -158,15 +162,15 @@ console.log(this.viewProxy);
       });
     });
 
-    /*
+    //to do load doesnst work right
     //refeshc image new mediaItem
     this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
       debugger;
       this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
         this.pasteDefaultUrl(this.mediaItem);
+        this.root.querySelector(".previewImage").src = item.src;
       });
     });
-    */
 
     /*
     debugger;
@@ -267,6 +271,7 @@ console.log(this.viewProxy);
   pasteDefaultUrl(item) {
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
+    debugger;
     this.viewProxy.update({ item: item });
     mediaEditForm.defaultUrl.classList.add(
       "mwf-material-filled",
