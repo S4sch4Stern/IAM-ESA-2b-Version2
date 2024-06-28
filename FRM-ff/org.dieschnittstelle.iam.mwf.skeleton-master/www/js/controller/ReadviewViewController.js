@@ -35,10 +35,11 @@ export default class ReadviewViewController extends mwf.ViewController {
       this.root
     ).viewProxy;
 
-    
     this.viewProxy.bindAction("deleteItem", () => {
-      mediaItem.delete().then(() => {
+      mediaItem.delete().then(() => {      
         this.previousView({ deletedItem: mediaItem });
+        debugger;
+
       });
     });
 

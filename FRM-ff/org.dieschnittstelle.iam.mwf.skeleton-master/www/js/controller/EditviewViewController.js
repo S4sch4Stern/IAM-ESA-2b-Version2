@@ -181,6 +181,8 @@ console.log(this.viewProxy);
     super.oncreate();
   }
 
+  //old without previousView();
+  /*
   createItem() {
     debugger;
     const formData = new FormData(this.editMediaForm);
@@ -193,9 +195,44 @@ console.log(this.viewProxy);
       this.mediaItem.create().then(() => {
         console.log("successfully created media item");
         this.nextView("mediaOverview");
+        console.log("aaa", this.mediaItem);
       });
+      console.log("bbb", )
     }
   }
+    */
+  
+    
+
+  
+  createItem() {
+    debugger;
+    const formData = new FormData(this.editMediaForm);
+
+    this.mediaItem.src = formData.get("src");
+    this.mediaItem.title = formData.get("title");
+    this.mediaItem.description = formData.get("description");
+
+    if (this.mediaItem._id) {
+      this.mediaItem.create().then(() => {
+        console.log("successfully created media item");
+        this.previousView({ createdItem: this.mediaItem });
+        console.log("item", this.mediaItem);        
+      });
+      console.log("ccc", this)
+      console.log(this.createdItem);
+  }
+
+}
+  
+
+  /*
+  this.previousView({ createdItem: this.mediaItem });
+  debugger;
+
+  console.log("test", this.mediaItem);
+  //this.nextView("mediaOverview");
+  */
 
   updateItem(item) {
     item.update().then(() => {
@@ -224,6 +261,10 @@ console.log(this.viewProxy);
    */
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
+        debugger;
+        console.log(this.nextviewid);
+        console.log(this.returnValue);
+
   }
 
   /*
