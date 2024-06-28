@@ -89,7 +89,7 @@
     <!-- Popup-dialog-menu on listItem(title) delete & edit -->
     <div data-mwf-templatename="mediaItemMenu" class="mwf-listitem-menu mwf-template mwf-databind mwf-dialog mwf-popup">
         <header>
-            <h2 class="mwf-dyncontent">{{title}}{{_id}}</h2>
+            <h2 class="mwf-dyncontent">{{title}}</h2>
         </header>
         <main>
             <ul>
@@ -184,14 +184,14 @@
 
 
         -->
-        <div class="mwf-view" id="mediaEditView" data-mwf-viewcontroller="EditviewViewController">
+        <div class="mwf-view" id="mediaEditview" data-mwf-viewcontroller="EditviewViewController">
             <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditviewTemplate">
             <header>
                 <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
                 <h1 class="mwf-dyncontent">{{#if item.created}}{{item.title}}{{else}}Neues Medium{{/if}}</h1>
                 <input class="mwf-imgbutton mwf-img-disk mwf-right-align" type="submit" value="speichern" form="mediaEditForm"></input>
-                <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem"></button>
-                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultUrl"></button>
+                <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem" disabled="{{#unless item.created}}disabled{{/unless}}"></button>
+                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultUrl" disabled="{{#if item.created}}disabled{{/if}}"></button></button>
             </header>
             <main class="mwf-scrollview">
                 <form id="mediaEditForm">

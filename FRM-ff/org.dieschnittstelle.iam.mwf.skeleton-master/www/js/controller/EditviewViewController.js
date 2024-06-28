@@ -80,6 +80,7 @@ export default class EditviewViewController extends mwf.ViewController {
     this.viewProxy.bindAction("pasteDefaultUrl", () => {
       this.pasteDefaultUrl(this.mediaItem);
     });
+
     /*
   debugger;
   this.mediaItem = this.args.item;
@@ -140,6 +141,34 @@ console.log(this.viewProxy);
       this.createItem(this.mediaItem);
     };
     */
+    this.editMediaForm = this.root.querySelector("#mediaEditForm");
+    this.editMediaForm.onsubmit = (event) => {
+      event.preventDefault();
+      if (this.mediaItem.created) {
+        this.updateItem(this.mediaItem);
+      } else this.createItem();
+      //this.createItem(this.mediaItem);
+    };
+
+    //delete item in editMediaview
+
+    this.viewProxy.bindAction("deleteItem", () => {
+      this.mediaItem.delete().then(() => {
+        this.previousView({ deletedItem: this.mediaItem });
+      });
+    });
+
+    /*
+    //refeshc image new mediaItem
+    this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
+      debugger;
+      this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
+        this.pasteDefaultUrl(this.mediaItem);
+      });
+    });
+    */
+
+    /*
     debugger;
     this.editMediaForm = this.root.querySelector("#mediaEditForm");
     this.editMediaForm.onsubmit = (event) => {
@@ -147,6 +176,7 @@ console.log(this.viewProxy);
       this.createItem();
       //this.createItem(this.mediaItem);
     };
+*/
 
     // debugger;
 
@@ -201,12 +231,8 @@ console.log(this.viewProxy);
     }
   }
     */
-  
-    
 
-  
   createItem() {
-    debugger;
     const formData = new FormData(this.editMediaForm);
 
     this.mediaItem.src = formData.get("src");
@@ -217,14 +243,12 @@ console.log(this.viewProxy);
       this.mediaItem.create().then(() => {
         console.log("successfully created media item");
         this.previousView({ createdItem: this.mediaItem });
-        console.log("item", this.mediaItem);        
+        console.log("item", this.mediaItem);
       });
-      console.log("ccc", this)
+      console.log("ccc", this);
       console.log(this.createdItem);
+    }
   }
-
-}
-  
 
   /*
   this.previousView({ createdItem: this.mediaItem });
@@ -240,9 +264,7 @@ console.log(this.viewProxy);
     });
   }
 
-  debugger;
   pasteDefaultUrl(item) {
-    debugger;
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
     this.viewProxy.update({ item: item });
@@ -251,9 +273,6 @@ console.log(this.viewProxy);
       "mwf-material-valid"
     );
   }
-  test() {
-    console.log("PasteURL");
-  }
 
   /*
    * for views that initiate transitions to other views
@@ -261,10 +280,6 @@ console.log(this.viewProxy);
    */
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
-        debugger;
-        console.log(this.nextviewid);
-        console.log(this.returnValue);
-
   }
 
   /*

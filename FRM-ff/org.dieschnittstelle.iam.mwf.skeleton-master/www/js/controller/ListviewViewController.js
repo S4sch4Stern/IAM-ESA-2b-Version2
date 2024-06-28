@@ -28,30 +28,11 @@ export default class ListviewViewController extends mwf.ViewController {
   async oncreate() {
     // TODO: do databinding, set listeners, initialise the view
     this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
-    /* old add MWF
-    this.addNewMediaItemElement.onclick = () => {
-      this.createNewItem();
-    };
-    */
-    this.addNewMediaItemElement.onclick = () => {
-      this.nextView("mediaEditView", { item: new entities.MediaItem() });
-      //this.nextView("mediaEditView", {item: new entities.MediaItem()});
-      //this.nextView("mediaEditView");
-    };
-    /*
-    this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
-    /* old add MWF
-    this.addNewMediaItemElement.onclick = () => {
-      this.createNewItem();
-    };
-    
-    this.addNewMediaItemElement.onclick = () => {
-      this.nextView("mediaEditView", {item: new entities.MediaItem()});
-      //this.nextView("mediaEditView", {item: new entities.MediaItem()});
-      //this.nextView("mediaEditView");
-    }
-    */
 
+    //handle on click addNewMediaItem in Listview FRM
+    this.addNewMediaItemElement.onclick = () => {
+      this.nextView("mediaEditview", { item: new entities.MediaItem() });
+    };
     this.readAllItems();
 
     // switching CRUD Operations
@@ -60,21 +41,27 @@ export default class ListviewViewController extends mwf.ViewController {
     this.switchCRUDOperation.onclick = () => {
       this.switchCRUDOps();
     };
-
     this.readAllItems();
 
     // set the currentCRUDScope
     this.root.querySelector("#crudOperationStatus").innerHTML =
       this.application.currentCRUDScope;
 
+    /* old  handle on click addNewMediaItem in Listview MWF/NJM/LDS
+    this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
+    /* old createNewItem MWF/NJM/LDS
+    this.addNewMediaItemElement.onclick = () => {
+      this.createNewItem();
+    };
+    */
+
     // call the superclass once creation is done
     super.oncreate();
   }
 
-  /* Alte create methode bis MWF/NJM+LDS
+  /* Alte create mediaItem methode bis MWF/NJM+LDS
   createNewItem() {
     // var newItem = new entities.MediaItem("", "https://placekitten.com/100/100");
-
     // placehold Bild ausgewählt, um die Anforderungen aus MF4 zu prüfen. Das placekitten Bild ist nicht verfügbar
     var newItem = new entities.MediaItem("", "https://placehold.co/100x100");
     this.showDialog("mediaItemDialog", {
@@ -185,6 +172,30 @@ export default class ListviewViewController extends mwf.ViewController {
       returnValue.deletedItem
     ) {
       this.removeFromListview(returnValue.deletedItem._id);
+    }
+
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.deletedItem
+    ) {
+      this.removeFromListview(returnValue.deletedItem._id);
+    }
+
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.updatedItem
+    ) {
+      this.updateInListview(returnValue.updatedItem._id);
+    }
+
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.createdItem
+    ) {
+      this.addToListview(returnValue.createdItem);
     }
   }
 
