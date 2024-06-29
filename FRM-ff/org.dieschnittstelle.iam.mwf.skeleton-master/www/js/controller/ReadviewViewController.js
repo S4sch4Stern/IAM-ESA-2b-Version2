@@ -24,21 +24,26 @@ export default class ReadviewViewController extends mwf.ViewController {
   async oncreate() {
     debugger;
     // TODO: do databinding, set listeners, initialise the view
-    var mediaItem = this.args.item;
+    this.mediaItem = this.args.item;
     // new entities.MediaItem("m","https://placekitten.com/300/400");
     debugger;
     this.viewProxy = this.bindElement(
       "mediaReadviewTemplate",
       {
-        item: mediaItem,
+        item: this.mediaItem,
       },
       this.root
     ).viewProxy;
 
     this.viewProxy.bindAction("deleteItem", () => {
-      mediaItem.delete().then(() => {
-        this.previousView({ deletedItem: mediaItem });
+      this.mediaItem.delete().then(() => {
+        this.previousView({ deletedItem: this.mediaItem });
       });
+    });
+
+    this.viewProxy.bindAction("mediaEditview", () => {
+      debugger;
+      this.nextView("mediaEditview", { item: this.mediaItem });
     });
 
     // call the superclass once creation is done
@@ -51,6 +56,34 @@ export default class ReadviewViewController extends mwf.ViewController {
    */
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
+
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.deletedItem
+    ) {
+      debugger;
+      this.previousView({ deletedItem: returnValue.deletedItem });
+      // return false - Rückkehr in die Listview "mediaOverview"
+      return false;
+    }
+
+    debugger;
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.updatedItem
+    ) {
+      this.viewProxy.update({ item: returnValue.updatedItem });
+    }
+    this.updatedItem = returnValue.updatedItem;
+    // mittels ViewProxy mediaitem updaten
+
+    // ohne diesen Teil erfolgt keine update Sicht in der Readview
+
+    // Übergabe des geupdateten mediaitems an den ReadviewViewController zur korrekten Anzeige nachdem updaten
+
+    // ohne diesen Teil gibt es Fehler weil das MediaItem undefined ist
   }
 
   /*

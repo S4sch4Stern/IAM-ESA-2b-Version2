@@ -48,7 +48,7 @@
             <ul class="mwf-listview" data-mwf-listitem-view="myapp-listitem" data-mwf-listitem-menu="mediaItemMenu">
                 <li class="mwf-listitem mwf-li-title-subtitle mwf-template mwf-databind"
                     data-mwf-templatename="myapp-listitem" data-mwf-targetview="mediaReadview">
-                    <img class="mwf-left-align" src="{{src}}" />
+                    <img class="mwf-left-align ListviewImage" src="{{src}}" />
                     <div class="mwf-li-titleblock">
                         <h2>{{title}}</h2>
                         <h3>{{addedDateString}}</h3>
@@ -70,12 +70,16 @@
 
             <header>
                 <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
-                <h1 class="mwf-left-align">{{item.title}}</h1>
+                <h1 class="mwf-left-align">{{item.title}}</h1>                
+                <button class="mwf-imgbutton mwf-img-pencil mwf-right-align" on-click="mediaEditview"></button>
                 <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem"></button>
+                
+                
             </header>
 
             <main class="mwf-scrollview">
                 <img src="{{item.src}}" />
+                <textarea class="descriptionTextarea" name="description" value="{{item.description}}" readonly></textarea>
             </main>
 
             <footer>

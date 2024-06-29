@@ -166,6 +166,8 @@ export default class ListviewViewController extends mwf.ViewController {
    */
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
+    debugger;
+    //korrekt
     if (
       nextviewid == "mediaReadview" &&
       returnValue &&
@@ -174,14 +176,16 @@ export default class ListviewViewController extends mwf.ViewController {
       this.removeFromListview(returnValue.deletedItem._id);
     }
 
+    //geht nicht - returnvalue undefined wenn backward readview
     if (
-      nextviewid == "mediaEditview" &&
+      nextviewid == "mediaReadview" &&
       returnValue &&
-      returnValue.deletedItem
+      returnValue.updatedItem
     ) {
-      this.removeFromListview(returnValue.deletedItem._id);
+      this.updateInListview(returnValue.updatedItem._id);
     }
 
+    // FRM Menu korrekt - returnvalue undefined wenn backward readview
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&
@@ -190,6 +194,7 @@ export default class ListviewViewController extends mwf.ViewController {
       this.updateInListview(returnValue.updatedItem._id);
     }
 
+    //korrekt
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&

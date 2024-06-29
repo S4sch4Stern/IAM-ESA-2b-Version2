@@ -24,6 +24,16 @@
 }
 
 .previewImage {
-   max-width: 400px;
-   max-height: 400px;
+   max-width: 100%;
+   width: 100%;
+}
+
+
+.ListviewImage {
+   width: 50px;
+   height: 50px;
+}
+
+.descriptionTextarea {
+   padding-left: 4px;
 }
