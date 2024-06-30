@@ -50,6 +50,14 @@ export default class ReadviewViewController extends mwf.ViewController {
     super.oncreate();
   }
 
+  // ergänze onback(); und übergebe den returnvalue updatedItem zur korrekten ausführung von onReturnFromNextView in der Listview
+  onback() {
+    debugger;
+    if (this.updatedItem) this.previousView({ updatedItem: this.updatedItem });
+    //in jedem anderen Fall rufe die onback(); in mwf.js auf
+    else super.onback();
+  }
+
   /*
    * for views that initiate transitions to other views
    * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.
@@ -63,20 +71,19 @@ export default class ReadviewViewController extends mwf.ViewController {
       returnValue.deletedItem
     ) {
       debugger;
+      this.deletedItem = returnValue.deletedItem;
       this.previousView({ deletedItem: returnValue.deletedItem });
       // return false - Rückkehr in die Listview "mediaOverview"
       return false;
     }
 
     debugger;
-    if (
-      nextviewid == "mediaEditview" &&
-      returnValue &&
-      returnValue.updatedItem
-    ) {
+    if (returnValue.updatedItem) {
+      this.updatedItem = returnValue.updatedItem;
       this.viewProxy.update({ item: returnValue.updatedItem });
     }
-    this.updatedItem = returnValue.updatedItem;
+
+    //this.updatedItem = returnValue.updatedItem;
     // mittels ViewProxy mediaitem updaten
 
     // ohne diesen Teil erfolgt keine update Sicht in der Readview

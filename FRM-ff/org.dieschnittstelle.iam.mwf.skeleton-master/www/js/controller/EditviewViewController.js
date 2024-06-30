@@ -66,7 +66,6 @@ export default class EditviewViewController extends mwf.ViewController {
     super();
     //unused
     this.crudops = GenericCRUDImplRemote.newInstance("MediaItem");
-    this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
     console.log("EditviewViewController()");
   }
 
@@ -167,7 +166,6 @@ console.log(this.viewProxy);
     //to do load doesnst work right
     //refeshc image new mediaItem
 
-    /*
     this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
       debugger;
       this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
@@ -176,7 +174,6 @@ console.log(this.viewProxy);
         this.viewProxy.update({ item: this.mediaItem });
       });
     });
-    */
 
     /*
     debugger;

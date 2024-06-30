@@ -35,6 +35,27 @@ export default class ListviewViewController extends mwf.ViewController {
     };
     this.readAllItems();
 
+    this.addListener(
+      new mwf.EventMatcher("crud", "created", "MediaItem"),
+      (event) => {
+        this.addToListview(event.data);
+      }
+    );
+
+    this.addListener(
+      new mwf.EventMatcher("crud", "updated", "MediaItem"),
+      (event) => {
+        this.updateInListview(event.data._id, event.data);
+      }
+    );
+
+    this.addListener(
+      new mwf.EventMatcher("crud", "deleted", "MediaItem"),
+      (event) => {
+        this.removeFromListview(event.data);
+      }
+    );
+
     // switching CRUD Operations
     this.switchCRUDOperation = this.root.querySelector("#switchCRUDOperation");
 
@@ -166,24 +187,6 @@ export default class ListviewViewController extends mwf.ViewController {
    */
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
-    debugger;
-    //korrekt
-    if (
-      nextviewid == "mediaReadview" &&
-      returnValue &&
-      returnValue.deletedItem
-    ) {
-      this.removeFromListview(returnValue.deletedItem._id);
-    }
-
-    //geht nicht - returnvalue undefined wenn backward readview
-    if (
-      nextviewid == "mediaReadview" &&
-      returnValue &&
-      returnValue.updatedItem
-    ) {
-      this.updateInListview(returnValue.updatedItem._id);
-    }
 
     // FRM Menu korrekt - returnvalue undefined wenn backward readview
     if (
@@ -201,6 +204,24 @@ export default class ListviewViewController extends mwf.ViewController {
       returnValue.createdItem
     ) {
       this.addToListview(returnValue.createdItem);
+    }
+
+    //korrekt
+    if (
+      nextviewid == "mediaReadview" &&
+      returnValue &&
+      returnValue.deletedItem
+    ) {
+      this.removeFromListview(returnValue.deletedItem._id);
+    }
+
+    //korrekt
+    if (
+      nextviewid == "mediaReadview" &&
+      returnValue &&
+      returnValue.updatedItem
+    ) {
+      this.updateInListview(returnValue.updatedItem._id);
     }
   }
 
