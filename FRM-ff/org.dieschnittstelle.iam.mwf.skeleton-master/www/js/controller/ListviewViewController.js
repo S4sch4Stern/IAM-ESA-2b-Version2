@@ -35,27 +35,6 @@ export default class ListviewViewController extends mwf.ViewController {
     };
     this.readAllItems();
 
-    this.addListener(
-      new mwf.EventMatcher("crud", "created", "MediaItem"),
-      (event) => {
-        this.addToListview(event.data);
-      }
-    );
-
-    this.addListener(
-      new mwf.EventMatcher("crud", "updated", "MediaItem"),
-      (event) => {
-        this.updateInListview(event.data._id, event.data);
-      }
-    );
-
-    this.addListener(
-      new mwf.EventMatcher("crud", "deleted", "MediaItem"),
-      (event) => {
-        this.removeFromListview(event.data);
-      }
-    );
-
     // switching CRUD Operations
     this.switchCRUDOperation = this.root.querySelector("#switchCRUDOperation");
 
