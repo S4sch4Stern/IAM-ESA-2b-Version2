@@ -145,49 +145,7 @@
 
     </div>
 
-        <!--
-        1erzeugen und modifizieren von mediaiten mittels submit input = speicher button kopfzeile
-                Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
-            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
-        2Löschen button - kopfzeile
-    
-        3 Elemente src, title und description von MediaItem
-        4 falls noch keine item exisitert soll create aufgerufen werden - vorgängeransicht aktualisieren
-            Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
-            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
-        5 wenn keine mediaitem exisisert soll lösch button nicht bedienbar sein
-        6 wenn item existiert sollen die werte abgerufen und in die Formular-Felder eingetragen werden
-        7 Vorschaubild aus src auslesen - auch beim erzeugen von item - kein ractive data binding experssion
-        manuel dem viewcontroller zuweisen
-            Hierfür können Sie z.B. einen Event Listener für das blur Event auf dem Eingabefeld
-                für das src Attribut setzen.
-
-        8 wenn item existiert bei betätigung des speicher btuittons update ausgeführt werden - zurück zu vorgängeransicht readview
-            Um ein submit-Element außerhalb des Formulars zu platzieren, zu dem es gehört,
-            können Sie darauf ein form Attribut setzen, dessen Wert die id des Formulars ist.
-        9 wenn item existiert bei betätigung des delete btuittons delete ausgeführt werden - zurück zu vorgängeransicht listview
-        10 kopzeile " neues medium" wenn neu oder wenn exisitiert dann title vom objekt angezeigt werden
-        11 fußzeile back button - listview
-        b drei Eingabeelemente jeweils als Kindelement eines <fieldset>
-        c die Feldnamen darin als <legend> angeben.
-        d <fieldset> markieren Sie dann mit der Klasse mwf-material.
-        e Beschreibung’ als textarea
-
-        12 paste url button - Default-Wert nur für neue mediaitems aktiv sein - bei betätigen soll das vorschaubild aktualisiert werden
-            Zur Darstellung des Bedienelements könnten Sie z.B. die Bildklasse mwf-img-paste
-                verwenden. Um das Eingabeelement für die URL nach Befüllung als ‘befüllt’ anzuzeigen, können
-                Sie bei Nutzung von mwf-material das entsprechende <fieldset> mit den Klassen mwf-material-filled
-                und mwf-material-valid markieren. Letztere Darstellungsmöglichkeit ist jedoch nicht abnahmerelevant.
-
-        13  aktionsmenü in listview ... Punkte button - mwf editieren erhalten - hinzufügen soll der editierdialog dargestellt werden
-            Dafür können Sie auf dem Element für die neue Aktion anstelle des Attributs
-            data-mwf-targetaction das Attribut data-mwf-targetview verwenden und diesem die id der Editieransicht
-            zuweisen.
-
-        14 aktionsmenü in listview ... Punkte button - clone des ausgewählten mediaitems
-
-
-        -->
+     <!--Editview - add and edit new Item-->
         <div class="mwf-view" id="mediaEditview" data-mwf-viewcontroller="EditviewViewController">
             <div class="mwf-template mwf-databind" data-mwf-templatename="mediaEditviewTemplate">
             <header>
