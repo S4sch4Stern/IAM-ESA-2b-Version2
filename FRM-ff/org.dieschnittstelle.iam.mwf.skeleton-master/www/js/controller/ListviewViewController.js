@@ -4,6 +4,7 @@
  */
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
+import { MyApplication as application } from "../Main.js";
 
 export default class ListviewViewController extends mwf.ViewController {
   // instance attributes set by mwf after instantiation
@@ -26,6 +27,9 @@ export default class ListviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
+    const crudOpsState = application.currentCRUDScope;
+    console.log("State", crudOpsState);
+
     // TODO: do databinding, set listeners, initialise the view
     this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
 

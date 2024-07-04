@@ -4,9 +4,6 @@
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
 import { GenericCRUDImplRemote } from "../Main.js";
-import { GenericCRUDImplLocal } from "../Main.js";
-
-import { MyApplication as application } from "../Main.js";
 
 export default class EditviewViewController extends mwf.ViewController {
   // instance attributes set by mwf after instantiation
@@ -60,7 +57,7 @@ export default class EditviewViewController extends mwf.ViewController {
 
     //!!!!!!!!!!!!
     //to do load doesnst work right
-    //refeshc image new mediaItem
+    //refesh image new mediaItem
 
     /*
     this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
@@ -72,6 +69,13 @@ export default class EditviewViewController extends mwf.ViewController {
       });
     });
     */
+
+    const disableButton = this.root.querySelector("#labelInput");
+    // Disable upload file input if currentCRUDScope is local
+    if (this.application.currentCRUDScope === "local") {
+      this.root.querySelector("#uploadButton").classList.add("disabled");
+      disableButton.disabled = true;
+    }
 
     // call the superclass once creation is done
     super.oncreate();

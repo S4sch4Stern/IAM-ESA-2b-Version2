@@ -34,6 +34,11 @@
    height: 50px;
 }
 
+/* depiction of disabled uploadButton if local*/
+#uploadButton.disabled {
+   opacity: 0.5;
+}
+
 /*
 .descriptionTextarea {
    padding-left: 4px;

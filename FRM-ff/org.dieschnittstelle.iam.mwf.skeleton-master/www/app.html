@@ -152,14 +152,17 @@
                 <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
                 <h1 class="mwf-dyncontent">{{#if item.created}}{{item.title}}{{else}}Neues Medium{{/if}}</h1>
                 <input class="mwf-imgbutton mwf-img-disk mwf-right-align" type="submit" value="speichern" form="mediaEditForm"></input>
-                <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem" disabled="{{#unless item.created}}disabled{{/unless}}"></button>
-                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultUrl" disabled="{{#if item.created}}disabled{{/if}}"></button></button>
+                <button class="mwf-imgbutton mwf-img-delete mwf-right-align" on-click="deleteItem" disabled="{{#if item.created}} false {{else}} true {{/if}}"></button>
+                <button class="mwf-imgbutton mwf-img-paste mwf-right-align" on-click="pasteDefaultUrl" disabled="{{#if item.created}} true {{else}} false {{/if}}"></button>
             </header>
             <main class="mwf-scrollview">
                 <form id="mediaEditForm">
                     <fieldset class="mwf-material" name="defaultUrl" >
                         <legend>URL</legend>
-                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" on-blur="refreshPreviewImage" required>
+                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" pattern="http://.*|https://.*" on-blur="refreshPreviewImage" required>
+                        <label class="mwf-material-altinput mwf-imgbutton mwf-img-camera" id="uploadButton">
+                            <input class="mwf-material-altinput" type="file" id="labelInput" name="srcinput"
+                                 accept="image/*, video/*"/>
                     </fieldset>
                     <img class="previewImage" src="{{#if item.created}}{{item.src}}{{/if}}">
                     <fieldset class="mwf-material">
