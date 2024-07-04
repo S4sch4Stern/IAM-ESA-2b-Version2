@@ -142,7 +142,6 @@
                 </button>
             </div>
         </main>
-
     </div>
 
      <!--Editview - add and edit new Item-->
@@ -161,7 +160,7 @@
                         <legend>URL</legend>
                         <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" pattern="http://.*|https://.*" on-blur="refreshPreviewImage" required>
                         <label class="mwf-material-altinput mwf-imgbutton mwf-img-camera" id="uploadButton">
-                            <input class="mwf-material-altinput" type="file" id="labelInput" name="srcinput"
+                            <input class="mwf-material-altinput" type="file" id="uploadInput" name="srcinput"
                                  accept="image/*, video/*"/>
                     </fieldset>
                     <img class="previewImage" src="{{#if item.created}}{{item.src}}{{/if}}">

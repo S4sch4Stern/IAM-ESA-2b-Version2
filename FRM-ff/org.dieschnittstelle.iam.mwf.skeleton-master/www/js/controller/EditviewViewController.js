@@ -70,20 +70,36 @@ export default class EditviewViewController extends mwf.ViewController {
     });
     */
 
-    const disableButton = this.root.querySelector("#labelInput");
-    // Disable upload file input if currentCRUDScope is local
-    if (this.application.currentCRUDScope === "local") {
+    const disableInput = this.root.querySelector("#uploadInput");
+    // Disable upload input wenn currentCRUDScope local ist
+    if (this.application.currentCRUDScope == "local") {
       this.root.querySelector("#uploadButton").classList.add("disabled");
-      disableButton.disabled = true;
+      disableInput.disabled = true;
     }
+
+    /*
+    // get local url
+    debugger;
+    this.editMediaForm = this.root.querySelector("#mediaEditForm");
+    const localFileSrcUrl = this.editMediaForm.srcInput;
+    localFileSrcUrl.onchange = () => {};
+    */
 
     // call the superclass once creation is done
     super.oncreate();
   }
 
+  // erstelle ein neues Item in der Edit/Add View
   createItem() {
-    const formData = new FormData(this.editMediaForm);
+    // get local url
+    /*
+    debugger;
+    this.localFileSrcUrl = this.root.getElementbyId("uploadInput");
 
+    const formData = new FormData(this.editMediaForm);
+*/
+
+    // create item
     this.mediaItem.src = formData.get("src");
     this.mediaItem.title = formData.get("title");
     this.mediaItem.description = formData.get("description");
@@ -96,13 +112,14 @@ export default class EditviewViewController extends mwf.ViewController {
     }
   }
 
+  // update vorhandenes item
   updateItem(item) {
     item.update().then(() => {
       this.previousView({ updatedItem: item });
     });
   }
 
-  // Setzt die nicht gespeicherte editierung in der Editview zurück wenn onbackButton genutzt wird
+  // Setzt die nicht gespeicherte Editierung in der Editview zurück wenn backwarButton genutzt wird
   onback() {
     this.mediaItem.title = this.mediaItemNoEdit.title;
     this.mediaItem.src = this.mediaItemNoEdit.src;
@@ -112,7 +129,9 @@ export default class EditviewViewController extends mwf.ViewController {
     this.previousView({ updatedItem: this.mediaItem });
   }
 
+  // setzte defaultURL mittels pasteButton
   pasteDefaultUrl(item) {
+    debugger;
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
     this.viewProxy.update({ item: item });
