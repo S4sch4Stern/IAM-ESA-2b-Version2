@@ -25,8 +25,7 @@ export default class ReadviewViewController extends mwf.ViewController {
     debugger;
     // TODO: do databinding, set listeners, initialise the view
     this.mediaItem = this.args.item;
-    // new entities.MediaItem("m","https://placekitten.com/300/400");
-    debugger;
+
     this.viewProxy = this.bindElement(
       "mediaReadviewTemplate",
       {
@@ -42,7 +41,6 @@ export default class ReadviewViewController extends mwf.ViewController {
     });
 
     this.viewProxy.bindAction("mediaEditview", () => {
-      debugger;
       this.nextView("mediaEditview", { item: this.mediaItem });
     });
 
@@ -52,7 +50,6 @@ export default class ReadviewViewController extends mwf.ViewController {
 
   // ergänze onback(); und übergebe den returnvalue updatedItem zur korrekten ausführung von onReturnFromNextView in der Listview
   onback() {
-    debugger;
     if (this.updatedItem) this.previousView({ updatedItem: this.updatedItem });
     //in jedem anderen Fall rufe die onback(); in mwf.js auf
     else super.onback();

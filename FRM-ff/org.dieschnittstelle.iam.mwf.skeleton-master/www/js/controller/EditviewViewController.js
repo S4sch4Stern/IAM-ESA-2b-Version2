@@ -1,5 +1,6 @@
 /**
  * @author Jörn Kreutel
+ * @modifiziert von Alexander Thofern mittels Übungsdokument.pdf & tutorial.pdf
  */
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
@@ -70,20 +71,31 @@ export default class EditviewViewController extends mwf.ViewController {
     });
     */
 
-    const disableInput = this.root.querySelector("#uploadInput");
     // Disable upload input wenn currentCRUDScope local ist
+    const disableInput = this.root.querySelector("#uploadButton");
+
     if (this.application.currentCRUDScope == "local") {
       this.root.querySelector("#uploadButton").classList.add("disabled");
       disableInput.disabled = true;
     }
 
-    /*
-    // get local url
-    debugger;
-    this.editMediaForm = this.root.querySelector("#mediaEditForm");
-    const localFileSrcUrl = this.editMediaForm.srcInput;
-    localFileSrcUrl.onchange = () => {};
-    */
+    // localfile Src/Name auslesen
+    const uploadInput = this.root.getElementsByTagName("form")[0];
+    console.log(uploadInput);
+    const localFileSrc = uploadInput.srcInput;
+
+    // localfile Src/Name per persistMediaContent() mittels XMLHttpRequest an mongoDB senden
+    localFileSrc.onchange = () => {
+      if (localFileSrc.files.length > 0) {
+        const scrfile = localFileSrc.files[0];
+
+        this.crudops
+          .persistMediaContent(this.mediaItem, "src", scrfile)
+          .then(() => {
+            this.getLocalUrl(this.mediaItem, this.mediaItem.src);
+          });
+      }
+    };
 
     // call the superclass once creation is done
     super.oncreate();
@@ -91,18 +103,12 @@ export default class EditviewViewController extends mwf.ViewController {
 
   // erstelle ein neues Item in der Edit/Add View
   createItem() {
-    // get local url
-    /*
-    debugger;
-    this.localFileSrcUrl = this.root.getElementbyId("uploadInput");
-
     const formData = new FormData(this.editMediaForm);
-*/
 
-    // create item
     this.mediaItem.src = formData.get("src");
     this.mediaItem.title = formData.get("title");
     this.mediaItem.description = formData.get("description");
+    this.mediaItem.description = formData.get("contenttype");
 
     if (this.mediaItem._id) {
       this.mediaItem.create().then(() => {
@@ -119,7 +125,7 @@ export default class EditviewViewController extends mwf.ViewController {
     });
   }
 
-  // Setzt die nicht gespeicherte Editierung in der Editview zurück wenn backwarButton genutzt wird
+  // Setzt die nicht gespeicherte Editierung in der Editview zurück, wenn backwardButton genutzt wird
   onback() {
     this.mediaItem.title = this.mediaItemNoEdit.title;
     this.mediaItem.src = this.mediaItemNoEdit.src;
@@ -129,11 +135,20 @@ export default class EditviewViewController extends mwf.ViewController {
     this.previousView({ updatedItem: this.mediaItem });
   }
 
-  // setzte defaultURL mittels pasteButton
+  // setzte defaultURL mittels pasteButton und update item
   pasteDefaultUrl(item) {
-    debugger;
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
+    this.viewProxy.update({ item: item });
+    mediaEditForm.defaultUrl.classList.add(
+      "mwf-material-filled",
+      "mwf-material-valid"
+    );
+  }
+  // füge localfile Src/Name in die src des Items ein und update item
+  getLocalUrl(item, URL) {
+    const fileURL = URL;
+    item.src = fileURL;
     this.viewProxy.update({ item: item });
     mediaEditForm.defaultUrl.classList.add(
       "mwf-material-filled",

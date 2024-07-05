@@ -158,10 +158,9 @@
                 <form id="mediaEditForm">
                     <fieldset class="mwf-material" name="defaultUrl" >
                         <legend>URL</legend>
-                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" pattern="http://.*|https://.*" on-blur="refreshPreviewImage" required>
+                        <input class="mwf-material-altinput-target" type="text" name="src" value="{{item.src}}" pattern="http://.*|https://.*|content/.*" on-blur="refreshPreviewImage" required>
                         <label class="mwf-material-altinput mwf-imgbutton mwf-img-camera" id="uploadButton">
-                            <input class="mwf-material-altinput" type="file" id="uploadInput" name="srcinput"
-                                 accept="image/*, video/*"/>
+                        <input class="mwf-material-altinput test" type="file" id="uploadInput" name="srcInput" accept="image/*, video/*"/>
                     </fieldset>
                     <img class="previewImage" src="{{#if item.created}}{{item.src}}{{/if}}">
                     <fieldset class="mwf-material">

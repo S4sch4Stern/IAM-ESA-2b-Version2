@@ -4,7 +4,6 @@
  */
 import { mwf } from "../Main.js";
 import { entities } from "../Main.js";
-import { MyApplication as application } from "../Main.js";
 
 export default class ListviewViewController extends mwf.ViewController {
   // instance attributes set by mwf after instantiation
@@ -27,9 +26,6 @@ export default class ListviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
-    const crudOpsState = application.currentCRUDScope;
-    console.log("State", crudOpsState);
-
     // TODO: do databinding, set listeners, initialise the view
     this.addNewMediaItemElement = this.root.querySelector("#addNewMediaItem");
 
@@ -37,6 +33,7 @@ export default class ListviewViewController extends mwf.ViewController {
     this.addNewMediaItemElement.onclick = () => {
       this.nextView("mediaEditview", { item: new entities.MediaItem() });
     };
+    // erneutes einlesen der items inklusive des neu Erstellten zur Übergabe an die Editview
     this.readAllItems();
 
     // switching CRUD Operations
@@ -45,7 +42,7 @@ export default class ListviewViewController extends mwf.ViewController {
     this.switchCRUDOperation.onclick = () => {
       this.switchCRUDOps();
     };
-    this.readAllItems();
+    //this.readAllItems();
 
     // set the currentCRUDScope
     this.root.querySelector("#crudOperationStatus").innerHTML =
@@ -89,6 +86,8 @@ export default class ListviewViewController extends mwf.ViewController {
     });
   }
 
+  //Unterbinden der Formulardatenübermittlung durch preventDefault
+  // bereits exisiterende Items löschen durch deleteItem
   editItem(item) {
     this.showDialog("mediaItemDialog", {
       item: item,
@@ -121,9 +120,7 @@ export default class ListviewViewController extends mwf.ViewController {
     this.root.querySelector("#crudOperationStatus").innerHTML =
       this.application.currentCRUDScope;
 
-    entities.MediaItem.readAll().then((items) => {
-      this.initialiseListview(items);
-    });
+    this.readAllItems();
   }
 
   /**
@@ -144,7 +141,7 @@ export default class ListviewViewController extends mwf.ViewController {
     });
   }
 
-  // readAllItems - refreshView
+  // readAllItems - erneutes einlesen der items
   readAllItems() {
     entities.MediaItem.readAll().then((items) => {
       this.initialiseListview(items);
@@ -156,7 +153,8 @@ export default class ListviewViewController extends mwf.ViewController {
     const newMediaItem = new entities.MediaItem(
       item.title,
       item.src,
-      item.description
+      item.description,
+      item.contentType
     );
     newMediaItem.create().then(() => {
       this.readAllItems();
