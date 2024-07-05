@@ -42,7 +42,7 @@ export default class ListviewViewController extends mwf.ViewController {
     this.switchCRUDOperation.onclick = () => {
       this.switchCRUDOps();
     };
-    //this.readAllItems();
+    this.readAllItems();
 
     // set the currentCRUDScope
     this.root.querySelector("#crudOperationStatus").innerHTML =
