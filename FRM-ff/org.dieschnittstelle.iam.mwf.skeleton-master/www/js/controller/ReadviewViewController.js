@@ -22,15 +22,13 @@ export default class ReadviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
-    debugger;
     // TODO: do databinding, set listeners, initialise the view
     // mediaItem aus args.item an die ReadView übergeben, um Zugriff zu gewährleisten
     this.mediaItem = this.args.item;
 
     // Zugriff per this.root auf die viewController gesteuerte Ansicht/HTML - Bedienelemente etc auslesen
-    //
-    debugger;
-    //  Befüllung des Templates durch Aufruf von bindElement() auf View Controller veranlasst werden
+    // Befüllung des Templates durch Aufruf von bindElement() auf  View Controller veranlassen
+    // Rückgabewert von bindElement() enthält viewproxy obj für folgende zugriffe/aktualisieren
     this.viewProxy = this.bindElement(
       "mediaReadviewTemplate",
       {
@@ -38,8 +36,11 @@ export default class ReadviewViewController extends mwf.ViewController {
       },
       this.root
     ).viewProxy;
+
+    // bindAction() auf viewProxy obj on-click handler
     this.viewProxy.bindAction("deleteItem", () => {
       this.mediaItem.delete().then(() => {
+        //Übergang in die Vorgängeransicht
         this.previousView({ deletedItem: this.mediaItem });
       });
     });
@@ -52,7 +53,7 @@ export default class ReadviewViewController extends mwf.ViewController {
     super.oncreate();
   }
 
-  // ergänze onback() aus mwf.js und übergebe den returnvalue updatedItem zur korrekten Ausführung von onReturnFromNextView in die Listview
+  // ergänze onback() aus mwf.js und übergebe den returnvValue updatedItem zur korrekten Ausführung von onReturnFromNextView in die Listview
   onback() {
     if (this.updatedItem) this.previousView({ updatedItem: this.updatedItem });
     //in jedem anderen Fall rufe onback() in mwf.js auf
@@ -73,7 +74,6 @@ export default class ReadviewViewController extends mwf.ViewController {
       returnValue.deletedItem
     ) {
       // this.deletedItem = returnValue.deletedItem;
-
       // übergeben den returnValue deletedItem zum handling von onReturnFromNextView in der listview
       this.previousView({ deletedItem: returnValue.deletedItem });
       return false;
@@ -85,18 +85,9 @@ export default class ReadviewViewController extends mwf.ViewController {
     if (returnValue.updatedItem) {
       // übergeben den returnValue updatedItem zum handling von onReturnFromNextView in der listview nach update item
       this.updatedItem = returnValue.updatedItem;
-      // update die readview nach edit item
+      // update readview nach edit/update item
       this.viewProxy.update({ item: returnValue.updatedItem });
     }
-
-    //this.updatedItem = returnValue.updatedItem;
-    // mittels ViewProxy mediaitem updaten
-
-    // ohne diesen Teil erfolgt keine update Sicht in der Readview
-
-    // Übergabe des geupdateten mediaitems an den ReadviewViewController zur korrekten Anzeige nachdem updaten
-
-    // ohne diesen Teil gibt es Fehler weil das MediaItem undefined ist
   }
 
   /*

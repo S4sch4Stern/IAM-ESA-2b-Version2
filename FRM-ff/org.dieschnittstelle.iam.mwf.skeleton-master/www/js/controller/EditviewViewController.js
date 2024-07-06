@@ -27,15 +27,22 @@ export default class EditviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
+    debugger;
+    // mediaItem aus args.item an die EditView übergeben, um Zugriff zu gewährleisten
     this.mediaItem = this.args.item;
+    // clone des items erstellen - auslesen des JSON strings und in obj umwandeln
     this.mediaItemNoEdit = JSON.parse(JSON.stringify(this.mediaItem));
 
+    // Zugriff per this.root auf die viewController gesteuerte Ansicht/HTML - Bedienelemente etc auslesen
+    // Befüllung des Templates durch Aufruf von bindElement() auf  View Controller veranlassen
+    // Rückgabewert von bindElement() enthält viewproxy obj für folgende zugriffe/aktualisieren
     this.viewProxy = this.bindElement(
       "mediaEditviewTemplate",
       { item: this.mediaItem },
       this.root
     ).viewProxy;
 
+    // bindAction() auf viewProxy obj on-click handler
     this.viewProxy.bindAction("pasteDefaultUrl", () => {
       this.pasteDefaultUrl(this.mediaItem);
     });
@@ -48,8 +55,11 @@ export default class EditviewViewController extends mwf.ViewController {
       } else this.createItem();
     };
 
-    //delete item in editMediaview
-
+    /**
+     * method delete item in editMediaView
+     *
+     * bindAction() auf viewProxy obj on-click handler
+     */
     this.viewProxy.bindAction("deleteItem", () => {
       this.mediaItem.delete().then(() => {
         this.previousView({ deletedItem: this.mediaItem });
@@ -71,9 +81,9 @@ export default class EditviewViewController extends mwf.ViewController {
     });
     */
 
-    // Disable upload input wenn currentCRUDScope local ist
+    // Zugriff auf Dom Element uploadInput
     const disableInput = this.root.querySelector("#uploadInput");
-    // Disable upload input wenn currentCRUDScope local ist
+    // add disable on upload input if currentCRUDScope local
     if (this.application.currentCRUDScope == "local") {
       this.root.querySelector("#uploadButton").classList.add("disabled");
       disableInput.disabled = true;
@@ -86,13 +96,14 @@ export default class EditviewViewController extends mwf.ViewController {
 
     // localfile Src/Name per persistMediaContent() mittels XMLHttpRequest an mongoDB senden
     localFileSrc.onchange = () => {
+      debugger;
       if (localFileSrc.files.length > 0) {
         const scrfile = localFileSrc.files[0];
 
         this.crudops
           .persistMediaContent(this.mediaItem, "src", scrfile)
           .then(() => {
-            this.getLocalUrl(this.mediaItem, this.mediaItem.src);
+            this.getLocalFileUrl(this.mediaItem, this.mediaItem.src);
           });
       }
     };
@@ -101,8 +112,12 @@ export default class EditviewViewController extends mwf.ViewController {
     super.oncreate();
   }
 
-  // erstelle ein neues Item in der Edit/Add View
+  /**
+   * method createItem
+   * Formulardaten auslesen - neues mediaItem erstellen
+   */
   createItem() {
+    debugger;
     const formData = new FormData(this.editMediaForm);
 
     this.mediaItem.src = formData.get("src");
@@ -117,14 +132,19 @@ export default class EditviewViewController extends mwf.ViewController {
     }
   }
 
-  // update vorhandenes item
+  /**
+   * method update existing item
+   */
   updateItem(item) {
     item.update().then(() => {
       this.previousView({ updatedItem: item });
     });
   }
 
-  // Setzt die nicht gespeicherte Editierung in der Editview zurück, wenn backwardButton genutzt wird
+  /**
+   * method onback for cloned item
+   * Setzt die nicht gespeicherte Editierung in der Editview zurück, wenn backwardButton genutzt wird
+   */
   onback() {
     this.mediaItem.title = this.mediaItemNoEdit.title;
     this.mediaItem.src = this.mediaItemNoEdit.src;
@@ -134,7 +154,10 @@ export default class EditviewViewController extends mwf.ViewController {
     this.previousView({ updatedItem: this.mediaItem });
   }
 
-  // setzte defaultURL mittels pasteButton und update item
+  /**
+   * method pasteDefaultUrl by button
+   * setzte defaultURL mittels pasteButton und update item
+   */
   pasteDefaultUrl(item) {
     const defaultUrl = "https://placehold.co/400";
     item.src = defaultUrl;
@@ -145,9 +168,12 @@ export default class EditviewViewController extends mwf.ViewController {
     );
   }
 
-  // füge localfile Src/Name in die src des Items ein und update item
-
-  getLocalUrl(item, URL) {
+  /**
+   * method getLocalFileUrl
+   * füge localfile src/Name in die src des items ein und update item
+   */
+  getLocalFileUrl(item, URL) {
+    debugger;
     const fileURL = URL;
     item.src = fileURL;
     this.viewProxy.update({ item: item });

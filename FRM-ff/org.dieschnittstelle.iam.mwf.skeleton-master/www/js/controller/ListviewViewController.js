@@ -90,8 +90,10 @@ export default class ListviewViewController extends mwf.ViewController {
   /**
    * method edit exisiting item
    *
-   * Unterbinden der Formulardatenübermittlung durch preventDefault
+   * Unterbinden der Formulardatenübermittlung durch preventDefault()
    * bereits exisiterende Items löschen durch deleteItem
+   * actionBindings Template eventhandling on-submit on-click
+   * update funktion übergeben um update() auf item aufzurufen
    */
 
   editItem(item) {
@@ -179,7 +181,7 @@ export default class ListviewViewController extends mwf.ViewController {
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
 
-    // Rückkehr aus mediaEditview nach update item
+    // Rückkehr aus mediaEditview (FRM) nach update item
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&
@@ -200,19 +202,9 @@ export default class ListviewViewController extends mwf.ViewController {
       this.addToListview(returnValue.createdItem);
     }
 
-    // Rückkehr aus mediaEditview nach delete item
+    // Rückkehr aus mediaEditview oder mediaReadview nach delete item
     if (
-      nextviewid == "mediaEditview" &&
-      returnValue &&
-      returnValue.deletedItem
-    ) {
-      // item aus der listview entfernen
-      this.removeFromListview(returnValue.deletedItem._id);
-    }
-
-    // Rückkehr aus mediaReadview nach delete item
-    if (
-      nextviewid == "mediaReadview" &&
+      (nextviewid == "mediaEditview" || "mediaReadview") &&
       returnValue &&
       returnValue.deletedItem
     ) {
@@ -232,6 +224,19 @@ export default class ListviewViewController extends mwf.ViewController {
       this.updateInListview(returnValue.updatedItem._id);
     }
   }
+
+  // Rückkehr aus mediaReadview nach delete item
+  /*
+    if (
+      nextviewid == "mediaReadview" &&
+      returnValue &&
+      returnValue.deletedItem
+    ) {
+      debugger;
+      // item aus der listview entfernen
+      this.removeFromListview(returnValue.deletedItem._id);
+    }
+      */
 
   /*
    * for views with listviews: bind a list item to an item view
