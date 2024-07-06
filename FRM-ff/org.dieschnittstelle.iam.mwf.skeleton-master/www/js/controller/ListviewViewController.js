@@ -80,14 +80,20 @@ export default class ListviewViewController extends mwf.ViewController {
   }
     */
 
+  // method delete item
   deleteItem(item) {
     item.delete(() => {
       this.removeFromListview(item._id);
     });
   }
 
-  //Unterbinden der Formulardatenübermittlung durch preventDefault
-  // bereits exisiterende Items löschen durch deleteItem
+  /**
+   * method edit exisiting item
+   *
+   * Unterbinden der Formulardatenübermittlung durch preventDefault
+   * bereits exisiterende Items löschen durch deleteItem
+   */
+
   editItem(item) {
     this.showDialog("mediaItemDialog", {
       item: item,
@@ -141,14 +147,18 @@ export default class ListviewViewController extends mwf.ViewController {
     });
   }
 
-  // readAllItems - erneutes einlesen der items
+  /**
+   * method readAllItems - erneutes einlesen der items
+   */
   readAllItems() {
     entities.MediaItem.readAll().then((items) => {
       this.initialiseListview(items);
     });
   }
 
-  //copyItem
+  /**
+   * method copyItem in listview
+   */
   copyItem(item) {
     const newMediaItem = new entities.MediaItem(
       item.title,
@@ -169,39 +179,56 @@ export default class ListviewViewController extends mwf.ViewController {
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
 
-    // FRM Menu korrekt - returnvalue undefined wenn backward readview
+    // Rückkehr aus mediaEditview nach update item
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&
       returnValue.updatedItem
     ) {
+      debugger;
+      // item in der listview updaten
       this.updateInListview(returnValue.updatedItem._id);
     }
 
-    //korrekt
+    // Rückkehr aus mediaEditview nach create item
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&
       returnValue.createdItem
     ) {
+      // item zur listview hinzufügen
       this.addToListview(returnValue.createdItem);
     }
 
-    //korrekt
+    // Rückkehr aus mediaEditview nach delete item
+    if (
+      nextviewid == "mediaEditview" &&
+      returnValue &&
+      returnValue.deletedItem
+    ) {
+      // item aus der listview entfernen
+      this.removeFromListview(returnValue.deletedItem._id);
+    }
+
+    // Rückkehr aus mediaReadview nach delete item
     if (
       nextviewid == "mediaReadview" &&
       returnValue &&
       returnValue.deletedItem
     ) {
+      debugger;
+      // item aus der listview entfernen
       this.removeFromListview(returnValue.deletedItem._id);
     }
 
-    //korrekt
+    // Rückkehr aus mediaReadview mittels onback/backwardsButton nach update item
+    // Rückkehr aus mediaReadview mittels onback/backwardsButton nach update item ohne Änderung in editview
     if (
       nextviewid == "mediaReadview" &&
       returnValue &&
       returnValue.updatedItem
     ) {
+      debugger;
       this.updateInListview(returnValue.updatedItem._id);
     }
   }

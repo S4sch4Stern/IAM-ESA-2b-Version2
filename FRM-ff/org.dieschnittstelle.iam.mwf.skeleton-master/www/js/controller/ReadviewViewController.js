@@ -24,10 +24,13 @@ export default class ReadviewViewController extends mwf.ViewController {
   async oncreate() {
     debugger;
     // TODO: do databinding, set listeners, initialise the view
-
+    // mediaItem aus args.item an die ReadView übergeben, um Zugriff zu gewährleisten
     this.mediaItem = this.args.item;
 
+    // Zugriff per this.root auf die viewController gesteuerte Ansicht/HTML - Bedienelemente etc auslesen
+    //
     debugger;
+    //  Befüllung des Templates durch Aufruf von bindElement() auf View Controller veranlasst werden
     this.viewProxy = this.bindElement(
       "mediaReadviewTemplate",
       {
@@ -35,7 +38,6 @@ export default class ReadviewViewController extends mwf.ViewController {
       },
       this.root
     ).viewProxy;
-
     this.viewProxy.bindAction("deleteItem", () => {
       this.mediaItem.delete().then(() => {
         this.previousView({ deletedItem: this.mediaItem });
@@ -50,10 +52,10 @@ export default class ReadviewViewController extends mwf.ViewController {
     super.oncreate();
   }
 
-  // ergänze onback(); und übergebe den returnvalue updatedItem zur korrekten ausführung von onReturnFromNextView in der Listview
+  // ergänze onback() aus mwf.js und übergebe den returnvalue updatedItem zur korrekten Ausführung von onReturnFromNextView in die Listview
   onback() {
     if (this.updatedItem) this.previousView({ updatedItem: this.updatedItem });
-    //in jedem anderen Fall rufe die onback(); in mwf.js auf
+    //in jedem anderen Fall rufe onback() in mwf.js auf
     else super.onback();
   }
 
@@ -64,21 +66,26 @@ export default class ReadviewViewController extends mwf.ViewController {
   async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
     // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
 
+    // Rückkehr aus mediaEditview (wenn edit über Readview geöffnet wurde) nach delete item
     if (
       nextviewid == "mediaEditview" &&
       returnValue &&
       returnValue.deletedItem
     ) {
-      debugger;
-      this.deletedItem = returnValue.deletedItem;
+      // this.deletedItem = returnValue.deletedItem;
+
+      // übergeben den returnValue deletedItem zum handling von onReturnFromNextView in der listview
       this.previousView({ deletedItem: returnValue.deletedItem });
-      // return false - Rückkehr in die Listview "mediaOverview"
       return false;
     }
 
-    debugger;
+    // Rückkehr aus mediaEditview (wenn edit über Readview geöffnet wurde) nach edit item
+    // Rückkehr aus mediaEditview mittels onback/backwardsButton nach update item ohne Änderung in editview
+
     if (returnValue.updatedItem) {
+      // übergeben den returnValue updatedItem zum handling von onReturnFromNextView in der listview nach update item
       this.updatedItem = returnValue.updatedItem;
+      // update die readview nach edit item
       this.viewProxy.update({ item: returnValue.updatedItem });
     }
 

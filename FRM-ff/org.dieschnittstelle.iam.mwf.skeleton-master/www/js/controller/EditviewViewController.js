@@ -72,8 +72,8 @@ export default class EditviewViewController extends mwf.ViewController {
     */
 
     // Disable upload input wenn currentCRUDScope local ist
-    const disableInput = this.root.querySelector("#uploadButton");
-
+    const disableInput = this.root.querySelector("#uploadInput");
+    // Disable upload input wenn currentCRUDScope local ist
     if (this.application.currentCRUDScope == "local") {
       this.root.querySelector("#uploadButton").classList.add("disabled");
       disableInput.disabled = true;
@@ -108,7 +108,6 @@ export default class EditviewViewController extends mwf.ViewController {
     this.mediaItem.src = formData.get("src");
     this.mediaItem.title = formData.get("title");
     this.mediaItem.description = formData.get("description");
-    this.mediaItem.description = formData.get("contenttype");
 
     if (this.mediaItem._id) {
       this.mediaItem.create().then(() => {
@@ -145,7 +144,9 @@ export default class EditviewViewController extends mwf.ViewController {
       "mwf-material-valid"
     );
   }
+
   // füge localfile Src/Name in die src des Items ein und update item
+
   getLocalUrl(item, URL) {
     const fileURL = URL;
     item.src = fileURL;
