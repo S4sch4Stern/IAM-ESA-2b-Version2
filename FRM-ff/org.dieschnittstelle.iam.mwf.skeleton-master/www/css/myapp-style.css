@@ -33,7 +33,7 @@
    height: 50px;
 }
 
-/* depiction of disabled uploadButton if disable=true / currentCRUDScope == local  */
+/* depiction of disabled uploadButton if disabled = true / currentCRUDScope == local  */
 #uploadButton.disabled {
    opacity: 0.5;
 }
