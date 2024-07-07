@@ -23,7 +23,7 @@ export default class ReadviewViewController extends mwf.ViewController {
    */
   async oncreate() {
     // TODO: do databinding, set listeners, initialise the view
-    // mediaItem aus args.item an die ReadView übergeben, um Zugriff zu gewährleisten
+    // mediaItem (Argumente) an die Readview übergeben / Zugriff gewährleisten
     this.mediaItem = this.args.item;
 
     // Zugriff per this.root auf die viewController gesteuerte Ansicht/HTML - Bedienelemente etc auslesen
@@ -74,16 +74,15 @@ export default class ReadviewViewController extends mwf.ViewController {
       returnValue.deletedItem
     ) {
       // this.deletedItem = returnValue.deletedItem;
-      // übergeben den returnValue deletedItem zum handling von onReturnFromNextView in der listview
+      // Übergabe returnValue deletedItem zum handling von onReturnFromNextView in der listview
       this.previousView({ deletedItem: returnValue.deletedItem });
       return false;
     }
 
     // Rückkehr aus mediaEditview (wenn edit über Readview geöffnet wurde) nach edit item
     // Rückkehr aus mediaEditview mittels onback/backwardsButton nach update item ohne Änderung in editview
-
     if (returnValue.updatedItem) {
-      // übergeben den returnValue updatedItem zum handling von onReturnFromNextView in der listview nach update item
+      // zuweisung returnValue updatedItem zum handling von onReturnFromNextView in der listview nach update item
       this.updatedItem = returnValue.updatedItem;
       // update readview nach edit/update item
       this.viewProxy.update({ item: returnValue.updatedItem });

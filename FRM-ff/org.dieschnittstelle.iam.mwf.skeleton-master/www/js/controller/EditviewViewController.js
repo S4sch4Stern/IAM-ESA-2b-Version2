@@ -12,14 +12,16 @@ export default class EditviewViewController extends mwf.ViewController {
   root;
   // TODO-REPEATED: declare custom instance attributes for this controller
   viewProxy;
-  addNewMediaItemElement;
+  //addNewMediaItemElement;
   mediaEditForm;
   mediaItemNoEdit;
 
   constructor() {
     super();
-    //unused
-    this.crudops = GenericCRUDImplRemote.newInstance("MediaItem");
+    // neue Instanz generischen CRUD (Create, Read, Update, Delete) Objekts erstellen
+    // für die Entität MediaItem
+    // rufe über das objekt newInstance() auf
+    this.crudRemoteObj = GenericCRUDImplRemote.newInstance("MediaItem");
     console.log("EditviewViewController()");
   }
 
@@ -27,8 +29,7 @@ export default class EditviewViewController extends mwf.ViewController {
    * for any view: initialise the view
    */
   async oncreate() {
-    debugger;
-    // mediaItem aus args.item an die EditView übergeben, um Zugriff zu gewährleisten
+    // mediaItem (Argumente) an die EditView übergeben / Zugriff gewährleisten
     this.mediaItem = this.args.item;
     // clone des items erstellen - auslesen des JSON strings und in obj umwandeln
     this.mediaItemNoEdit = JSON.parse(JSON.stringify(this.mediaItem));
@@ -47,6 +48,7 @@ export default class EditviewViewController extends mwf.ViewController {
       this.pasteDefaultUrl(this.mediaItem);
     });
 
+    // create oder update item handler
     this.editMediaForm = this.root.querySelector("#mediaEditForm");
     this.editMediaForm.onsubmit = (event) => {
       event.preventDefault();
@@ -66,21 +68,6 @@ export default class EditviewViewController extends mwf.ViewController {
       });
     });
 
-    //!!!!!!!!!!!!
-    //to do load doesnst work right
-    //refesh image new mediaItem
-
-    /*
-    this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
-      debugger;
-      this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
-        this.pasteDefaultUrl(this.mediaItem);
-        this.root.querySelector(".previewImage").src = item.src;
-        this.viewProxy.update({ item: this.mediaItem });
-      });
-    });
-    */
-
     // Zugriff auf Dom Element uploadInput
     const disableInput = this.root.querySelector("#uploadInput");
     // add disable on upload input if currentCRUDScope local
@@ -89,20 +76,22 @@ export default class EditviewViewController extends mwf.ViewController {
       disableInput.disabled = true;
     }
 
-    // localfile Src/Name auslesen
-    const uploadInput = this.root.getElementsByTagName("form")[0];
-    console.log(uploadInput);
-    const localFileSrc = uploadInput.srcInput;
+    // form aus dem DOM auslesen und an getFormInput zuweisen
+    const getFormInput = this.root.getElementsByTagName("form")[0];
+    // input mit name srcInput zuweisen
+    const localFileSrc = getFormInput.srcInput;
 
-    // localfile Src/Name per persistMediaContent() mittels XMLHttpRequest an mongoDB senden
+    // onchange eventhandler bei Wertänderung des HTML-Elements localFileSrc obj
     localFileSrc.onchange = () => {
-      debugger;
       if (localFileSrc.files.length > 0) {
+        //file aus fileList auslesen
         const scrfile = localFileSrc.files[0];
 
-        this.crudops
+        // mediaitem, attr & Fileobj an persistMediaContent() übergeben für XMLHttpRequest
+        this.crudRemoteObj
           .persistMediaContent(this.mediaItem, "src", scrfile)
           .then(() => {
+            // mediaitem und src an getLocalFileUrl() übergeben - korrekten Link mit Namen der src in html einfügen
             this.getLocalFileUrl(this.mediaItem, this.mediaItem.src);
           });
       }
@@ -117,7 +106,6 @@ export default class EditviewViewController extends mwf.ViewController {
    * Formulardaten auslesen - neues mediaItem erstellen
    */
   createItem() {
-    debugger;
     const formData = new FormData(this.editMediaForm);
 
     this.mediaItem.src = formData.get("src");
@@ -173,7 +161,6 @@ export default class EditviewViewController extends mwf.ViewController {
    * füge localfile src/Name in die src des items ein und update item
    */
   getLocalFileUrl(item, URL) {
-    debugger;
     const fileURL = URL;
     item.src = fileURL;
     this.viewProxy.update({ item: item });
@@ -182,6 +169,22 @@ export default class EditviewViewController extends mwf.ViewController {
       "mwf-material-valid"
     );
   }
+
+  //!!!!!!!!!!!!
+  //to do load doesnst work right
+  //refesh image new mediaItem
+  // in der oncreate methode
+
+  /*
+    this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
+      debugger;
+      this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
+        this.pasteDefaultUrl(this.mediaItem);
+        this.root.querySelector(".previewImage").src = item.src;
+        this.viewProxy.update({ item: this.mediaItem });
+      });
+    });
+    */
 
   /*
    * for views that initiate transitions to other views

@@ -187,7 +187,6 @@ export default class ListviewViewController extends mwf.ViewController {
       returnValue &&
       returnValue.updatedItem
     ) {
-      debugger;
       // item in der listview updaten
       this.updateInListview(returnValue.updatedItem._id);
     }
@@ -208,7 +207,6 @@ export default class ListviewViewController extends mwf.ViewController {
       returnValue &&
       returnValue.deletedItem
     ) {
-      debugger;
       // item aus der listview entfernen
       this.removeFromListview(returnValue.deletedItem._id);
     }
@@ -220,7 +218,6 @@ export default class ListviewViewController extends mwf.ViewController {
       returnValue &&
       returnValue.updatedItem
     ) {
-      debugger;
       this.updateInListview(returnValue.updatedItem._id);
     }
   }
