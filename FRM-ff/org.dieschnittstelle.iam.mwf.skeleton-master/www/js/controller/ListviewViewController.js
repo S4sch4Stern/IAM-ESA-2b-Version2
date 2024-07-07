@@ -33,7 +33,7 @@ export default class ListviewViewController extends mwf.ViewController {
     this.addNewMediaItemElement.onclick = () => {
       this.nextView("mediaEditview", { item: new entities.MediaItem() });
     };
-    // erneutes einlesen der items inklusive des neu Erstellten zur Übergabe an die Editview
+    // erneutes einlesen der items inklusive des neu Erstellten
     this.readAllItems();
 
     // switching CRUD Operations
@@ -59,26 +59,6 @@ export default class ListviewViewController extends mwf.ViewController {
     // call the superclass once creation is done
     super.oncreate();
   }
-
-  /* Alte create mediaItem methode bis MWF/NJM+LDS
-  createNewItem() {
-    // var newItem = new entities.MediaItem("", "https://placekitten.com/100/100");
-    // placehold Bild ausgewählt, um die Anforderungen aus MF4 zu prüfen. Das placekitten Bild ist nicht verfügbar
-    var newItem = new entities.MediaItem("", "https://placehold.co/100x100");
-    this.showDialog("mediaItemDialog", {
-      item: newItem,
-      actionBindings: {
-        submitForm: (event) => {
-          event.original.preventDefault();
-          newItem.create().then(() => {
-            this.addToListview(newItem);
-          });
-          this.hideDialog();
-        },
-      },
-    });
-  }
-    */
 
   // method delete item
   deleteItem(item) {
@@ -174,6 +154,26 @@ export default class ListviewViewController extends mwf.ViewController {
     });
   }
 
+  /* Alte create mediaItem methode bis MWF/NJM+LDS
+  createNewItem() {
+    // var newItem = new entities.MediaItem("", "https://placekitten.com/100/100");
+    // placehold Bild ausgewählt, um die Anforderungen aus MF4 zu prüfen. Das placekitten Bild ist nicht verfügbar
+    var newItem = new entities.MediaItem("", "https://placehold.co/100x100");
+    this.showDialog("mediaItemDialog", {
+      item: newItem,
+      actionBindings: {
+        submitForm: (event) => {
+          event.original.preventDefault();
+          newItem.create().then(() => {
+            this.addToListview(newItem);
+          });
+          this.hideDialog();
+        },
+      },
+    });
+  }
+    */
+
   /*
    * for views that initiate transitions to other views
    * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.
@@ -221,19 +221,6 @@ export default class ListviewViewController extends mwf.ViewController {
       this.updateInListview(returnValue.updatedItem._id);
     }
   }
-
-  // Rückkehr aus mediaReadview nach delete item
-  /*
-    if (
-      nextviewid == "mediaReadview" &&
-      returnValue &&
-      returnValue.deletedItem
-    ) {
-      debugger;
-      // item aus der listview entfernen
-      this.removeFromListview(returnValue.deletedItem._id);
-    }
-      */
 
   /*
    * for views with listviews: bind a list item to an item view

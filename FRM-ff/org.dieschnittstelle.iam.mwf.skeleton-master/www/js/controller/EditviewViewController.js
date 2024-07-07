@@ -170,22 +170,6 @@ export default class EditviewViewController extends mwf.ViewController {
     );
   }
 
-  //!!!!!!!!!!!!
-  //to do load doesnst work right
-  //refesh image new mediaItem
-  // in der oncreate methode
-
-  /*
-    this.viewProxy.bindAction("refreshPreviewImage", async (event) => {
-      debugger;
-      this.loadMediaContent(this.mediaItem, "contentType").then((event) => {
-        this.pasteDefaultUrl(this.mediaItem);
-        this.root.querySelector(".previewImage").src = item.src;
-        this.viewProxy.update({ item: this.mediaItem });
-      });
-    });
-    */
-
   /*
    * for views that initiate transitions to other views
    * NOTE: return false if the view shall not be returned to, e.g. because we immediately want to display its previous view. Otherwise, do not return anything.
